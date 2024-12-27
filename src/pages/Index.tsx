@@ -2,22 +2,31 @@ import React from "react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white p-8 shadow-sm">
+    <div className="min-h-screen bg-gray-50 py-4 px-2 sm:py-8 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto bg-white p-4 sm:p-8 shadow-sm">
         {/* Header */}
-        <div className="flex justify-between items-start mb-8">
-          <h1 className="text-4xl font-bold tracking-tight">INVOICE</h1>
-          <p className="text-2xl font-medium">#0123</p>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 sm:mb-8 gap-4">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">INVOICE</h1>
+          <p className="text-xl sm:text-2xl font-medium">#0123</p>
         </div>
 
         {/* Customer and Date Info */}
-        <div className="grid grid-cols-2 gap-8 mb-8">
-          <div>
-            <h2 className="text-sm font-semibold uppercase mb-1">DATE:</h2>
-            <input
-              type="date"
-              className="border-b border-gray-300 focus:border-gray-500 outline-none"
-            />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-sm font-semibold uppercase mb-1">DATE:</h2>
+              <input
+                type="date"
+                className="w-full border-b border-gray-300 focus:border-gray-500 outline-none"
+              />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold uppercase mb-1">DUE DATE:</h2>
+              <input
+                type="date"
+                className="w-full border-b border-gray-300 focus:border-gray-500 outline-none"
+              />
+            </div>
           </div>
           <div>
             <h2 className="text-sm font-semibold uppercase mb-1">CUSTOMER:</h2>
