@@ -8,6 +8,7 @@ import { CompanyInfoSection } from "@/components/customer/CompanyInfoSection";
 import { AddressSection } from "@/components/customer/AddressSection";
 import { ContactPersonSection } from "@/components/customer/ContactPersonSection";
 import { CustomerFormData } from "@/types/customer";
+import { store } from "@/lib/store";
 
 const NewCustomer = () => {
   const navigate = useNavigate();
@@ -31,10 +32,16 @@ const NewCustomer = () => {
   });
 
   const onSubmit = async (data: CustomerFormData) => {
-    // TODO: Implement actual customer creation logic
-    console.log("Customer data:", data);
+    store.addCustomer({
+      id: "", // Will be set by store
+      companyName: data.companyName,
+      email: data.email,
+      phone: data.phone,
+      billingAddress: data.billingAddress,
+    });
+    
     toast.success("Customer created successfully");
-    navigate("/customers");
+    navigate("/dashboard");
   };
 
   return (

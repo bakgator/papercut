@@ -20,17 +20,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useNavigate } from "react-router-dom";
-
-// Mock data - replace with real data later
-const customers = [
-  {
-    id: "1",
-    name: "BAKGATOR AB",
-    email: "KARL@INDE.SE",
-    phone: "0725432110",
-    address: "FERSENS VÄG 12, MALMÖ",
-  },
-];
+import { store } from "@/lib/store";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   customerId: z.string({
@@ -42,10 +33,13 @@ const formSchema = z.object({
   dueDate: z.string({
     required_error: "Please select a due date",
   }),
+  amount: z.string().min(1, "Amount is required"),
 });
 
 const NewInvoice = () => {
   const navigate = useNavigate();
+  const customers = store.getCustomers();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,12 +47,22 @@ const NewInvoice = () => {
       dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
         .toISOString()
         .split("T")[0],
+      amount: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    // Handle form submission here
+    const customer = customers.find(c => c.id === values.customerId);
+    if (!customer) return;
+
+    store.addInvoice({
+      customer: customer.companyName,
+      date: values.invoiceDate,
+      amount: values.amount,
+      status: "unpaid",
+    });
+    
+    toast.success("Invoice created successfully");
     navigate("/dashboard");
   };
 
@@ -90,7 +94,7 @@ const NewInvoice = () => {
                       <SelectContent>
                         {customers.map((customer) => (
                           <SelectItem key={customer.id} value={customer.id}>
-                            {customer.name}
+                            {customer.companyName}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -129,6 +133,20 @@ const NewInvoice = () => {
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount (SEK)</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <div className="flex justify-end gap-4">
                 <Button

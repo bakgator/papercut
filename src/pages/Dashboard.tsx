@@ -10,19 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-// Mock data - replace with real data later
-const invoices = [
-  {
-    id: "1",
-    customer: "BAKGATOR AB",
-    date: "2024-02-20",
-    amount: "10000",
-    status: "unpaid",
-  },
-];
+import { store } from "@/lib/store";
 
 const Dashboard = () => {
+  const invoices = store.getInvoices();
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
