@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
+import NewCustomer from "./pages/NewCustomer";
 import Navigation from "./components/Navigation";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/customers" element={<Customers />} />
+            <Route path="/customers/new" element={<NewCustomer />} />
             <Route path="/invoices/new" element={<Index />} />
             <Route path="/invoices/:id" element={<Index />} />
           </Routes>
