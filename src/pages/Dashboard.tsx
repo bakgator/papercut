@@ -26,9 +26,17 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
+        {/* Header with Logo */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <div className="flex items-center gap-3">
+            <div className="text-primary w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10">
+              <FileText className="w-6 h-6" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">InvoiceHero</h1>
+              <p className="text-sm text-muted-foreground">Be a hero at managing your invoices</p>
+            </div>
+          </div>
           <div className="flex gap-3">
             <Button asChild>
               <Link to="/customers/new">
