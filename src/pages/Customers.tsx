@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, User } from "lucide-react";
+import { Plus, User, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Table,
