@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
 import NewCustomer from "./pages/NewCustomer";
+import NewInvoice from "./pages/NewInvoice";
 import Navigation from "./components/Navigation";
 
 const queryClient = new QueryClient();
@@ -24,7 +25,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/customers/new" element={<NewCustomer />} />
-            <Route path="/invoices/new" element={<Index />} />
+            <Route path="/invoices/new" element={<NewInvoice />} />
             <Route path="/invoices/:id" element={<Index />} />
           </Routes>
         </div>
