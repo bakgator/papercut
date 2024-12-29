@@ -33,8 +33,8 @@ const Dashboard = () => {
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold">InvoiceHero</h1>
-              <p className="text-sm text-muted-foreground">Be a hero at managing your invoices</p>
+              <h1 className="text-3xl font-bold">Papertrail</h1>
+              <p className="text-sm text-muted-foreground">Keep track of your paperwork like a pro</p>
             </div>
           </div>
           <div className="flex gap-3">
