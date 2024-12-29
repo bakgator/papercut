@@ -33,7 +33,6 @@ const NewCustomer = () => {
 
   const onSubmit = async (data: CustomerFormData) => {
     store.addCustomer({
-      id: "", // Will be set by store
       companyName: data.companyName,
       email: data.email,
       phone: data.phone,

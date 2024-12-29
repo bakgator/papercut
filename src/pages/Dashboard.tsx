@@ -67,7 +67,7 @@ const Dashboard = () => {
                   <TableCell>#{invoice.id}</TableCell>
                   <TableCell>{invoice.customer}</TableCell>
                   <TableCell>{invoice.date}</TableCell>
-                  <TableCell>{invoice.amount} SEK</TableCell>
+                  <TableCell>{invoice.total} SEK</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-sm ${
                       invoice.status === 'paid' 
