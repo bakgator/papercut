@@ -132,11 +132,13 @@ export const RevenueOverview = () => {
                 dataKey="date" 
                 axisLine={false}
                 tickLine={false}
+                hide={true}
               />
               <YAxis 
                 tickFormatter={(value) => formatCurrency(Number(value))}
                 axisLine={false}
                 tickLine={false}
+                hide={true}
               />
               <Line 
                 type="monotone"
