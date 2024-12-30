@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 
 const links = [
@@ -24,7 +25,7 @@ const Navigation = memo(() => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen w-full">
+      <div className="flex min-h-screen">
         <Sidebar>
           <SidebarHeader className="border-b border-border/10">
             <div className="flex items-center gap-2 px-4">
@@ -34,13 +35,6 @@ const Navigation = memo(() => {
                 className="h-12"
                 loading="eager"
               />
-              <Link
-                to="/login"
-                className="ml-auto inline-flex items-center px-3 py-1 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-accent/50"
-              >
-                <LogIn className="w-4 h-4 mr-2" />
-                Login
-              </Link>
             </div>
           </SidebarHeader>
           <SidebarContent>
@@ -70,6 +64,15 @@ const Navigation = memo(() => {
               })}
             </SidebarMenu>
           </SidebarContent>
+          <SidebarFooter className="border-t border-border/10 p-4">
+            <Link
+              to="/login"
+              className="flex items-center px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-accent/50"
+            >
+              <LogIn className="w-4 h-4 mr-2" />
+              Login
+            </Link>
+          </SidebarFooter>
         </Sidebar>
       </div>
     </SidebarProvider>

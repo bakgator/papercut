@@ -6,9 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Navigation from "./components/Navigation";
-import Footer from "./components/Footer";
 
-// Lazy load components
 const Index = lazy(() => import("./pages/Index"));
 const NewDashboard = lazy(() => import("./pages/NewDashboard"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -35,7 +33,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex min-h-screen bg-[#ffffff]">
+          <div className="flex min-h-screen w-full">
             <Navigation />
             <div className="flex-1">
               <Suspense fallback={
