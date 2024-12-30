@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, FileText, User, Check, Edit } from "lucide-react";
+import { Plus, FileText, User, Check, Edit, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -10,6 +10,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { store } from "@/lib/store";
 import { toast } from "sonner";
 
@@ -88,27 +94,53 @@ const Dashboard = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" asChild>
-                        <Link to={`/invoices/${invoice.id}`}>
-                          <FileText className="w-4 h-4" />
-                          View
-                        </Link>
-                      </Button>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link to={`/invoices/${invoice.id}/edit`}>
-                          <Edit className="w-4 h-4" />
-                          Edit
-                        </Link>
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="outline" size="icon" asChild>
+                              <Link to={`/invoices/${invoice.id}`}>
+                                <Eye className="h-4 w-4" />
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>View Invoice</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="outline" size="icon" asChild>
+                              <Link to={`/invoices/${invoice.id}/edit`}>
+                                <Edit className="h-4 w-4" />
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Edit Invoice</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
                       {invoice.status === 'unpaid' && (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleMarkAsPaid(invoice.id)}
-                        >
-                          <Check className="w-4 h-4" />
-                          Mark Paid
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                variant="outline" 
+                                size="icon"
+                                onClick={() => handleMarkAsPaid(invoice.id)}
+                              >
+                                <Check className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Mark as Paid</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       )}
                     </div>
                   </TableCell>
