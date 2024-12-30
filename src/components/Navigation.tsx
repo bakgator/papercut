@@ -16,10 +16,10 @@ const Navigation = () => {
   return (
     <div className="flex flex-col">
       {/* Logo Section */}
-      <div className="bg-gradient-to-br from-background to-card/50 backdrop-blur-sm border-b border-border/50 py-6">
+      <div className="bg-gradient-to-br from-background via-background to-background/80 backdrop-blur-sm border-b border-border/50 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
-            <div className="text-primary w-12 h-12 flex items-center justify-center rounded-xl bg-primary/10 backdrop-blur-sm border border-primary/20">
+            <div className="text-primary w-12 h-12 flex items-center justify-center rounded-2xl bg-primary/10 backdrop-blur-sm border border-primary/20">
               <FileText className="w-6 h-6" />
             </div>
             <div>
@@ -31,7 +31,7 @@ const Navigation = () => {
       </div>
 
       {/* Navigation Links */}
-      <nav className="bg-gradient-to-br from-background to-card/50 backdrop-blur-sm border-b border-border/50">
+      <nav className="bg-gradient-to-br from-background via-background to-background/80 backdrop-blur-sm border-b border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16">
             <div className="flex space-x-8">
@@ -43,10 +43,10 @@ const Navigation = () => {
                     key={link.href}
                     to={link.href}
                     className={cn(
-                      "inline-flex items-center px-3 py-2 border-b-2 text-sm font-medium transition-all duration-200",
+                      "inline-flex items-center px-4 py-2 text-sm font-medium transition-all duration-200 rounded-xl",
                       isActive
-                        ? "border-primary text-primary"
-                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+                        ? "bg-primary/10 text-primary border border-primary/20"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     )}
                   >
                     <Icon className={cn("w-4 h-4 mr-2 transition-colors", 
