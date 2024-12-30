@@ -20,11 +20,13 @@ const NewDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen w-full">
-      <div className="space-y-8">
-        <h1 className="text-2xl font-bold font-mono text-left p-4">Dashboard Overview</h1>
+    <div className="min-h-screen">
+      <div className="space-y-6">
+        <div className="border-b">
+          <h1 className="text-2xl font-bold font-mono p-4">Dashboard Overview</h1>
+        </div>
         
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 px-4">
+        <div className="px-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Card className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Invoices</CardTitle>
