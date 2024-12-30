@@ -20,6 +20,7 @@ export default {
 		extend: {
 			colors: {
 				'custom-bg': '#dbd8d0',
+				'custom-element': '#edebe7',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',

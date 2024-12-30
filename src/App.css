@@ -36,7 +36,7 @@
 }
 
 .card {
-  @apply bg-gradient-to-br from-card/50 to-background backdrop-blur-sm border border-border/50 shadow-sm rounded-2xl;
+  @apply bg-custom-element backdrop-blur-sm border border-border/50 shadow-sm rounded-2xl;
   padding: 2.5em;
 }
 
