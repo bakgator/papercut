@@ -124,50 +124,49 @@ export const RevenueOverview = () => {
           <ToggleGroupItem value="year" className="font-mono">Year</ToggleGroupItem>
         </ToggleGroup>
       </CardHeader>
-      <CardContent>
-        <div className="h-[300px] w-full">
-          <ChartContainer config={chartConfig}>
-            <LineChart 
-              data={chartData} 
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-              height={260}
-            >
-              <XAxis 
-                dataKey="date" 
-                axisLine={false}
-                tickLine={false}
-                hide={true}
-              />
-              <YAxis 
-                tickFormatter={(value) => formatCurrency(Number(value))}
-                axisLine={false}
-                tickLine={false}
-                hide={true}
-              />
-              <Line 
-                type="monotone"
-                dataKey="amount"
-                stroke="currentColor"
-                strokeWidth={2}
-                dot={{ r: 4, strokeWidth: 2 }}
-                activeDot={{ r: 6, strokeWidth: 2 }}
-                strokeDasharray="5 5"
-              />
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    return (
-                      <div className="bg-popover text-popover-foreground p-2 rounded-sm border border-border">
-                        <p className="font-mono">{formatCurrency(Number(payload[0].value))}</p>
-                      </div>
-                    );
-                  }
-                  return null;
-                }}
-              />
-            </LineChart>
-          </ChartContainer>
-        </div>
+      <CardContent className="h-[300px]">
+        <ChartContainer config={chartConfig}>
+          <LineChart 
+            data={chartData}
+            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            width={800}
+            height={240}
+          >
+            <XAxis 
+              dataKey="date" 
+              axisLine={false}
+              tickLine={false}
+              hide={true}
+            />
+            <YAxis 
+              tickFormatter={(value) => formatCurrency(Number(value))}
+              axisLine={false}
+              tickLine={false}
+              hide={true}
+            />
+            <Line 
+              type="monotone"
+              dataKey="amount"
+              stroke="currentColor"
+              strokeWidth={2}
+              dot={{ r: 4, strokeWidth: 2 }}
+              activeDot={{ r: 6, strokeWidth: 2 }}
+              strokeDasharray="5 5"
+            />
+            <Tooltip
+              content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  return (
+                    <div className="bg-popover text-popover-foreground p-2 rounded-sm border border-border">
+                      <p className="font-mono">{formatCurrency(Number(payload[0].value))}</p>
+                    </div>
+                  );
+                }
+                return null;
+              }}
+            />
+          </LineChart>
+        </ChartContainer>
       </CardContent>
     </Card>
   );
