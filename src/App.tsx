@@ -11,6 +11,7 @@ import NewCustomer from "./pages/NewCustomer";
 import NewInvoice from "./pages/NewInvoice";
 import Navigation from "./components/Navigation";
 import Paperwork from "./pages/Paperwork";
+import About from "./pages/About";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/invoices/:id/edit" element={<NewInvoice />} />
             <Route path="/invoices/:id" element={<Index />} />
             <Route path="/paperwork" element={<Paperwork />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </div>
       </BrowserRouter>
