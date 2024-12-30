@@ -20,11 +20,11 @@ const NewDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen fade-in">
-      <div className="p-4 space-y-8">
-        <h1 className="text-2xl font-bold font-mono text-left">Dashboard Overview</h1>
+    <div className="min-h-screen w-full">
+      <div className="space-y-8">
+        <h1 className="text-2xl font-bold font-mono text-left p-4">Dashboard Overview</h1>
         
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 px-4">
           <Card className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Invoices</CardTitle>
@@ -54,26 +54,30 @@ const NewDashboard = () => {
         </div>
 
         {upcomingDueInvoices.length > 0 && (
-          <Alert variant="destructive" className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="h-4 w-4 mt-1" />
-                <div className="text-left">
-                  <AlertTitle>Attention Required</AlertTitle>
-                  <AlertDescription>
-                    You have {upcomingDueInvoices.length} invoice(s) due within the next 7 days.
-                  </AlertDescription>
+          <div className="px-4">
+            <Alert variant="destructive" className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-4 w-4 mt-1" />
+                  <div className="text-left">
+                    <AlertTitle>Attention Required</AlertTitle>
+                    <AlertDescription>
+                      You have {upcomingDueInvoices.length} invoice(s) due within the next 7 days.
+                    </AlertDescription>
+                  </div>
                 </div>
+                <Button variant="outline" className="gap-2 bg-custom-element hover:bg-white/80">
+                  <AlertCircle className="w-4 h-4" />
+                  Check this
+                </Button>
               </div>
-              <Button variant="outline" className="gap-2 bg-custom-element hover:bg-white/80">
-                <AlertCircle className="w-4 h-4" />
-                Check this
-              </Button>
-            </div>
-          </Alert>
+            </Alert>
+          </div>
         )}
 
-        <RevenueOverview />
+        <div className="px-4">
+          <RevenueOverview />
+        </div>
       </div>
     </div>
   );

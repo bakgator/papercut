@@ -33,9 +33,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex min-h-screen">
+          <div className="flex min-h-screen w-full">
             <Navigation />
-            <main className="flex-1">
+            <main className="flex-1 w-full">
               <Suspense fallback={
                 <div className="flex items-center justify-center h-full">
                   <div className="w-8 h-8 rounded-full border-4 border-primary border-r-transparent animate-spin"></div>
