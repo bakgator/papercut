@@ -1,4 +1,5 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import { InvoiceHeader } from "./InvoiceHeader";
 import { InvoiceCustomerSection } from "./InvoiceCustomerSection";
 import { InvoiceDatesSection } from "./InvoiceDatesSection";
@@ -11,55 +12,76 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import type { InvoiceItem } from "@/types/invoice";
 
+interface FormValues {
+  customerId: string;
+  invoiceDate: string;
+  dueDate: string;
+  items: InvoiceItem[];
+  notes: string;
+  paymentTerms: string;
+}
+
 const InvoiceForm = () => {
   const navigate = useNavigate();
-  const [items, setItems] = React.useState<InvoiceItem[]>([
-    { id: "1", description: "", quantity: 0, unitPrice: 0, total: 0 }
-  ]);
+  const form = useForm<FormValues>({
+    defaultValues: {
+      customerId: "",
+      invoiceDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date().toISOString().split('T')[0],
+      items: [{ id: "1", description: "", quantity: 0, unitPrice: 0, total: 0 }],
+      notes: "",
+      paymentTerms: "net30"
+    }
+  });
 
-  const [invoiceDate, setInvoiceDate] = React.useState<string>(new Date().toISOString().split('T')[0]);
-  const [dueDate, setDueDate] = React.useState<string>(new Date().toISOString().split('T')[0]);
-  const [notes, setNotes] = React.useState("");
-  const [selectedCustomerId, setSelectedCustomerId] = React.useState<string>("");
-  const [paymentTerms, setPaymentTerms] = React.useState("net30");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!selectedCustomerId) {
+  const handleSubmit = form.handleSubmit((data) => {
+    if (!data.customerId) {
       toast.error("Please fill in all required fields");
       return;
     }
 
-    const customer = store.getCustomer(selectedCustomerId);
+    const customer = store.getCustomer(data.customerId);
     if (!customer) {
       toast.error("Invalid customer selected");
       return;
     }
 
-    const subtotal = items.reduce((acc, item) => acc + item.total, 0);
+    const subtotal = data.items.reduce((acc, item) => acc + item.total, 0);
     const vatRate = 25; // 25% VAT rate
     const vatAmount = subtotal * (vatRate / 100);
     const total = subtotal + vatAmount;
 
     const invoice = {
       customer: customer.companyName,
-      customerId: selectedCustomerId,
-      date: invoiceDate,
-      dueDate,
-      items,
+      customerId: data.customerId,
+      date: data.invoiceDate,
+      dueDate: data.dueDate,
+      items: data.items,
       subtotal,
       vatRate,
       vatAmount,
       total,
       status: "unpaid" as const,
-      paymentTerms,
-      notes
+      paymentTerms: data.paymentTerms,
+      notes: data.notes
     };
 
     store.addInvoice(invoice);
     toast.success("Invoice created successfully");
     navigate("/dashboard");
+  });
+
+  const updateItemTotal = (index: number) => {
+    const items = form.getValues("items");
+    const item = items[index];
+    item.total = item.quantity * item.unitPrice;
+    form.setValue("items", items);
+  };
+
+  // Create a mock invoice object for InvoiceActions
+  const mockInvoice = {
+    id: "new",
+    status: "draft"
   };
 
   return (
@@ -68,29 +90,21 @@ const InvoiceForm = () => {
       <InvoiceCustomerSection customers={store.getCustomers()} />
       <InvoiceDatesSection />
       <InvoiceItemsSection 
-        form={{
-          control: { register: () => {} },
-          watch: () => items,
-          getValues: () => ({ items }),
-          setValue: (name: string, value: any) => {
-            if (name === "items") setItems(value);
-          }
-        }}
-        updateItemTotal={(index: number) => {
-          const newItems = [...items];
-          const item = newItems[index];
-          item.total = item.quantity * item.unitPrice;
-          setItems(newItems);
-        }}
+        form={form}
+        updateItemTotal={updateItemTotal}
       />
       <InvoiceNotesSection />
       <InvoiceTotalsSection 
-        subtotal={items.reduce((acc, item) => acc + item.total, 0)}
+        subtotal={form.watch("items").reduce((acc, item) => acc + item.total, 0)}
         vatRate={25}
-        vatAmount={items.reduce((acc, item) => acc + item.total, 0) * 0.25}
-        total={items.reduce((acc, item) => acc + item.total, 0) * 1.25}
+        vatAmount={form.watch("items").reduce((acc, item) => acc + item.total, 0) * 0.25}
+        total={form.watch("items").reduce((acc, item) => acc + item.total, 0) * 1.25}
       />
-      <InvoiceActions />
+      <InvoiceActions 
+        invoice={mockInvoice}
+        onMarkAsPaid={() => {}}
+        onMarkAsUnpaid={() => {}}
+      />
     </form>
   );
 };

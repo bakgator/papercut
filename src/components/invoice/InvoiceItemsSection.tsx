@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
+import type { InvoiceItem } from "@/types/invoice";
 
 interface InvoiceItemsSectionProps {
   form: UseFormReturn<any>;
@@ -20,7 +21,7 @@ export const InvoiceItemsSection: React.FC<InvoiceItemsSectionProps> = ({ form, 
     const currentItems = form.getValues("items");
     form.setValue("items", [
       ...currentItems,
-      { description: "", quantity: 1, unitPrice: 0, total: 0 },
+      { id: Math.random().toString(), description: "", quantity: 1, unitPrice: 0, total: 0 },
     ]);
   };
 
@@ -46,8 +47,8 @@ export const InvoiceItemsSection: React.FC<InvoiceItemsSectionProps> = ({ form, 
         </Button>
       </div>
 
-      {form.watch("items").map((item: any, index: number) => (
-        <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gradient-to-br from-card/30 to-background/30 backdrop-blur-sm border border-border/50 rounded-lg">
+      {form.watch("items").map((item: InvoiceItem, index: number) => (
+        <div key={item.id || index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gradient-to-br from-card/30 to-background/30 backdrop-blur-sm border border-border/50 rounded-lg">
           <FormField
             control={form.control}
             name={`items.${index}.description`}

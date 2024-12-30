@@ -7,10 +7,14 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { useFormContext } from "react-hook-form";
 
 export const InvoiceNotesSection = () => {
+  const form = useFormContext();
+  
   return (
     <FormField
+      control={form.control}
       name="notes"
       render={({ field }) => (
         <FormItem>
