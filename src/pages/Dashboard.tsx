@@ -28,31 +28,20 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header with Logo */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="text-primary w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10">
-              <FileText className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">Papertrail</h1>
-              <p className="text-sm text-muted-foreground">Keep track of your paperwork like a pro</p>
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <Button asChild>
-              <Link to="/customers/new">
-                <User className="mr-1" />
-                New Customer
-              </Link>
-            </Button>
-            <Button asChild>
-              <Link to="/invoices/new">
-                <Plus className="mr-1" />
-                New Invoice
-              </Link>
-            </Button>
-          </div>
+        {/* Actions */}
+        <div className="flex justify-end gap-3">
+          <Button asChild>
+            <Link to="/customers/new">
+              <User className="mr-1" />
+              New Customer
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link to="/invoices/new">
+              <Plus className="mr-1" />
+              New Invoice
+            </Link>
+          </Button>
         </div>
 
         {/* Invoices Table */}
