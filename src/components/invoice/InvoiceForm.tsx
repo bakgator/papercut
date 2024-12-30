@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { InvoiceHeader } from "./InvoiceHeader";
 import { InvoiceCustomerSection } from "./InvoiceCustomerSection";
 import { InvoiceDatesSection } from "./InvoiceDatesSection";
@@ -23,7 +23,7 @@ interface FormValues {
 
 const InvoiceForm = () => {
   const navigate = useNavigate();
-  const form = useForm<FormValues>({
+  const methods = useForm<FormValues>({
     defaultValues: {
       customerId: "",
       invoiceDate: new Date().toISOString().split('T')[0],
@@ -34,7 +34,7 @@ const InvoiceForm = () => {
     }
   });
 
-  const handleSubmit = form.handleSubmit((data) => {
+  const onSubmit = (data: FormValues) => {
     if (!data.customerId) {
       toast.error("Please fill in all required fields");
       return;
@@ -52,6 +52,7 @@ const InvoiceForm = () => {
     const total = subtotal + vatAmount;
 
     const invoice = {
+      id: Math.random().toString(),
       customer: customer.companyName,
       customerId: data.customerId,
       date: data.invoiceDate,
@@ -69,43 +70,44 @@ const InvoiceForm = () => {
     store.addInvoice(invoice);
     toast.success("Invoice created successfully");
     navigate("/dashboard");
-  });
+  };
 
   const updateItemTotal = (index: number) => {
-    const items = form.getValues("items");
+    const items = methods.getValues("items");
     const item = items[index];
     item.total = item.quantity * item.unitPrice;
-    form.setValue("items", items);
+    methods.setValue("items", items);
   };
 
   // Create a mock invoice object for InvoiceActions
   const mockInvoice = {
     id: "new",
-    status: "draft"
+    status: "draft" as const
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-8">
-      <InvoiceHeader />
-      <InvoiceCustomerSection customers={store.getCustomers()} />
-      <InvoiceDatesSection />
-      <InvoiceItemsSection 
-        form={form}
-        updateItemTotal={updateItemTotal}
-      />
-      <InvoiceNotesSection />
-      <InvoiceTotalsSection 
-        subtotal={form.watch("items").reduce((acc, item) => acc + item.total, 0)}
-        vatRate={25}
-        vatAmount={form.watch("items").reduce((acc, item) => acc + item.total, 0) * 0.25}
-        total={form.watch("items").reduce((acc, item) => acc + item.total, 0) * 1.25}
-      />
-      <InvoiceActions 
-        invoice={mockInvoice}
-        onMarkAsPaid={() => {}}
-        onMarkAsUnpaid={() => {}}
-      />
-    </form>
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="max-w-4xl mx-auto p-6 space-y-8">
+        <InvoiceHeader />
+        <InvoiceCustomerSection customers={store.getCustomers()} />
+        <InvoiceDatesSection />
+        <InvoiceItemsSection 
+          updateItemTotal={updateItemTotal}
+        />
+        <InvoiceNotesSection />
+        <InvoiceTotalsSection 
+          subtotal={methods.watch("items").reduce((acc, item) => acc + item.total, 0)}
+          vatRate={25}
+          vatAmount={methods.watch("items").reduce((acc, item) => acc + item.total, 0) * 0.25}
+          total={methods.watch("items").reduce((acc, item) => acc + item.total, 0) * 1.25}
+        />
+        <InvoiceActions 
+          invoice={mockInvoice}
+          onMarkAsPaid={() => {}}
+          onMarkAsUnpaid={() => {}}
+        />
+      </form>
+    </FormProvider>
   );
 };
 

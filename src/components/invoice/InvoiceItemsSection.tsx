@@ -8,15 +8,16 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { UseFormReturn } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import type { InvoiceItem } from "@/types/invoice";
 
 interface InvoiceItemsSectionProps {
-  form: UseFormReturn<any>;
   updateItemTotal: (index: number) => void;
 }
 
-export const InvoiceItemsSection: React.FC<InvoiceItemsSectionProps> = ({ form, updateItemTotal }) => {
+export const InvoiceItemsSection: React.FC<InvoiceItemsSectionProps> = ({ updateItemTotal }) => {
+  const form = useFormContext();
+
   const addItem = () => {
     const currentItems = form.getValues("items");
     form.setValue("items", [
