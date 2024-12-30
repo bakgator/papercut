@@ -35,7 +35,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen bg-white flex flex-col">
+          <div className="flex min-h-screen bg-[#ffffff]">
             <Navigation />
             <div className="flex-1">
               <Suspense fallback={
