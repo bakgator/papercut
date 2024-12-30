@@ -1,4 +1,3 @@
-// Simple in-memory store for development
 interface Customer {
   id: string;
   companyName: string;
@@ -110,6 +109,15 @@ class Store {
     const invoice = this.invoices.find(inv => inv.id === id);
     if (invoice) {
       invoice.status = 'paid';
+      return true;
+    }
+    return false;
+  }
+
+  markInvoiceAsUnpaid(id: string) {
+    const invoice = this.invoices.find(inv => inv.id === id);
+    if (invoice) {
+      invoice.status = 'unpaid';
       return true;
     }
     return false;

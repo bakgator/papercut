@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, FileText, User, Check, Edit, Eye } from "lucide-react";
+import { Plus, FileText, User, Check, Edit, Eye, RefreshCcw } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -27,6 +27,14 @@ const Dashboard = () => {
       toast.success("Invoice marked as paid");
     } else {
       toast.error("Failed to mark invoice as paid");
+    }
+  };
+
+  const handleMarkAsUnpaid = (id: string) => {
+    if (store.markInvoiceAsUnpaid(id)) {
+      toast.success("Invoice marked as unpaid");
+    } else {
+      toast.error("Failed to mark invoice as unpaid");
     }
   };
 
@@ -124,7 +132,7 @@ const Dashboard = () => {
                         </Tooltip>
                       </TooltipProvider>
 
-                      {invoice.status === 'unpaid' && (
+                      {invoice.status === 'unpaid' ? (
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -138,6 +146,23 @@ const Dashboard = () => {
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>Mark as Paid</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ) : (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                variant="outline" 
+                                size="icon"
+                                onClick={() => handleMarkAsUnpaid(invoice.id)}
+                              >
+                                <RefreshCcw className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Mark as Unpaid</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
