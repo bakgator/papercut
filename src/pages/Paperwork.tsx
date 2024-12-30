@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload } from "lucide-react";
+import { Plus, Upload, FileImage } from "lucide-react";
 import { Link } from "react-router-dom";
 import { store } from "@/lib/store";
 import { toast } from "sonner";
 import { InvoiceTable } from "@/components/invoice/InvoiceTable";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Paperwork = () => {
   const invoices = store.getInvoices();
@@ -13,6 +14,7 @@ const Paperwork = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleMarkAsPaid = (id: string) => {
     if (store.markInvoiceAsPaid(id)) {
@@ -29,6 +31,25 @@ const Paperwork = () => {
       toast.error("Failed to mark invoice as unpaid");
     }
   };
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setSelectedFile(e.dataTransfer.files[0]);
+    }
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -73,79 +94,111 @@ const Paperwork = () => {
         </div>
 
         {/* Purchase Upload Section */}
-        <div className="bg-white shadow-sm rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Upload Purchase</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Receipt Image</label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full"
-              />
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Upload Purchase</h2>
+            <div className="space-y-4">
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                  isDragging
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-300 hover:border-primary"
+                }`}
+              >
+                <div className="flex flex-col items-center justify-center space-y-4">
+                  <FileImage className="w-12 h-12 text-gray-400" />
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500">
+                      Drag and drop your receipt here, or
+                    </p>
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary/80 focus-within:outline-none"
+                    >
+                      <span>browse to choose a file</span>
+                      <Input
+                        id="file-upload"
+                        type="file"
+                        className="sr-only"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                  </div>
+                  {selectedFile && (
+                    <p className="text-sm text-gray-500">
+                      Selected: {selectedFile.name}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Description
+                </label>
+                <Input
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Enter purchase description"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Amount</label>
+                <Input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="Enter amount"
+                />
+              </div>
+              <Button onClick={handleUpload}>
+                <Upload className="mr-1" />
+                Upload Purchase
+              </Button>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Description</label>
-              <Input
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter purchase description"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Amount</label>
-              <Input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="Enter amount"
-              />
-            </div>
-            <Button onClick={handleUpload}>
-              <Upload className="mr-1" />
-              Upload Purchase
-            </Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Purchases Display */}
-        <div className="bg-white shadow-sm rounded-lg">
-          <div className="p-4 border-b">
-            <h2 className="text-xl font-semibold">Recent Purchases</h2>
-          </div>
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {purchases.map((purchase) => (
-              <div key={purchase.id} className="border rounded-lg p-4">
-                <img
-                  src={purchase.imageUrl}
-                  alt={purchase.description}
-                  className="w-full h-48 object-cover rounded-lg mb-2"
-                />
-                <h3 className="font-medium">{purchase.description}</h3>
-                <p className="text-gray-600">
-                  Amount: ${purchase.amount.toFixed(2)}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {new Date(purchase.date).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-xl font-semibold mb-4">Recent Purchases</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {purchases.map((purchase) => (
+                <div key={purchase.id} className="border rounded-lg p-4">
+                  <img
+                    src={purchase.imageUrl}
+                    alt={purchase.description}
+                    className="w-full h-48 object-cover rounded-lg mb-2"
+                  />
+                  <h3 className="font-medium">{purchase.description}</h3>
+                  <p className="text-gray-600">
+                    Amount: ${purchase.amount.toFixed(2)}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(purchase.date).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Invoices Table */}
-        <div className="bg-white shadow-sm rounded-lg">
-          <div className="p-4 border-b">
-            <h2 className="text-xl font-semibold">All Invoices</h2>
-          </div>
-          <InvoiceTable
-            invoices={invoices}
-            onMarkAsPaid={handleMarkAsPaid}
-            onMarkAsUnpaid={handleMarkAsUnpaid}
-          />
-        </div>
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-xl font-semibold mb-4">All Invoices</h2>
+            <InvoiceTable
+              invoices={invoices}
+              onMarkAsPaid={handleMarkAsPaid}
+              onMarkAsUnpaid={handleMarkAsUnpaid}
+            />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
