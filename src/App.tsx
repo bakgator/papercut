@@ -33,7 +33,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex min-h-screen w-full">
+          <div className="flex h-screen w-full overflow-hidden">
             <Navigation />
             <main className="flex-1 overflow-y-auto">
               <Suspense fallback={

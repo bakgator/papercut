@@ -20,7 +20,7 @@ const NewDashboard = () => {
   });
 
   return (
-    <div className="min-h-full p-0">
+    <div className="h-full">
       <div className="space-y-6">
         <div className="border-b">
           <h1 className="text-2xl font-bold font-mono p-4">Dashboard Overview</h1>
