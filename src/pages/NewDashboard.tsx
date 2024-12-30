@@ -20,19 +20,17 @@ const NewDashboard = () => {
   });
 
   return (
-    <div className="min-h-full p-4">
-      <div className="space-y-6">
-        <div className="border-b">
-          <h1 className="text-2xl font-bold font-mono p-4">Dashboard Overview</h1>
-        </div>
+    <div className="min-h-screen bg-custom-bg p-4 fade-in">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <h1 className="text-2xl font-bold font-mono">Dashboard Overview</h1>
         
-        <div className="px-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Card className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Invoices</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold font-mono text-left">{totalInvoices}</div>
+              <div className="text-2xl font-bold font-mono">{totalInvoices}</div>
             </CardContent>
           </Card>
 
@@ -41,7 +39,7 @@ const NewDashboard = () => {
               <CardTitle className="text-sm font-medium">Paid Invoices</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600 font-mono text-left">{paidInvoices}</div>
+              <div className="text-2xl font-bold text-green-600 font-mono">{paidInvoices}</div>
             </CardContent>
           </Card>
 
@@ -50,36 +48,32 @@ const NewDashboard = () => {
               <CardTitle className="text-sm font-medium">Unpaid Invoices</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-yellow-600 font-mono text-left">{unpaidInvoices}</div>
+              <div className="text-2xl font-bold text-yellow-600 font-mono">{unpaidInvoices}</div>
             </CardContent>
           </Card>
         </div>
 
         {upcomingDueInvoices.length > 0 && (
-          <div className="px-4">
-            <Alert variant="destructive" className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="h-4 w-4 mt-1" />
-                  <div className="text-left">
-                    <AlertTitle>Attention Required</AlertTitle>
-                    <AlertDescription>
-                      You have {upcomingDueInvoices.length} invoice(s) due within the next 7 days.
-                    </AlertDescription>
-                  </div>
+          <Alert variant="destructive" className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-4 w-4 mt-1" />
+                <div>
+                  <AlertTitle>Attention Required</AlertTitle>
+                  <AlertDescription>
+                    You have {upcomingDueInvoices.length} invoice(s) due within the next 7 days.
+                  </AlertDescription>
                 </div>
-                <Button variant="outline" className="gap-2 bg-custom-element hover:bg-white/80">
-                  <AlertCircle className="w-4 h-4" />
-                  Check this
-                </Button>
               </div>
-            </Alert>
-          </div>
+              <Button variant="outline" className="gap-2 bg-custom-element hover:bg-white/80">
+                <AlertCircle className="w-4 h-4" />
+                Check this
+              </Button>
+            </div>
+          </Alert>
         )}
 
-        <div className="px-4">
-          <RevenueOverview />
-        </div>
+        <RevenueOverview />
       </div>
     </div>
   );

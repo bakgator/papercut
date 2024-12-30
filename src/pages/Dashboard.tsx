@@ -26,7 +26,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#ffffff] p-4 sm:p-8">
+    <div className="min-h-screen bg-custom-bg p-4 sm:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Actions */}
         <div className="flex justify-end gap-3">
@@ -45,7 +45,7 @@ const Dashboard = () => {
         </div>
 
         {/* Invoices Table */}
-        <div className="bg-[#ffffff] shadow-sm rounded-lg">
+        <div className="bg-white shadow-sm rounded-lg">
           <div className="p-4 border-b">
             <h2 className="text-xl font-semibold">Recent Invoices</h2>
           </div>

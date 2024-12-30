@@ -2,16 +2,6 @@ import React, { memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { FileText, User, BookOpen, LayoutDashboard, LogIn } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarFooter,
-} from "@/components/ui/sidebar";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -24,56 +14,57 @@ const Navigation = memo(() => {
   const location = useLocation();
 
   return (
-    <SidebarProvider defaultOpen={true}>
-      <Sidebar className="border-r">
-        <SidebarHeader className="border-b border-border/10">
-          <div className="flex items-center gap-2 px-4">
+    <div className="flex flex-col">
+      <div className="bg-custom-bg py-6">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center">
             <img 
               src="/lovable-uploads/c0b9f3b4-6f7e-47a5-ab17-de467377618c.png" 
               alt="Logo" 
               className="h-12"
               loading="eager"
             />
+            <Link
+              to="/login"
+              className="inline-flex items-center px-3 py-1 text-sm font-medium transition-all duration-200 rounded-lg bg-custom-element text-muted-foreground hover:text-foreground hover:bg-accent/50"
+            >
+              <LogIn className="w-4 h-4 mr-2" />
+              Login
+            </Link>
           </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            {links.map((link) => {
-              const Icon = link.icon;
-              const isActive = location.pathname === link.href;
-              return (
-                <SidebarMenuItem key={link.href}>
-                  <SidebarMenuButton
-                    asChild
-                    data-active={isActive}
+        </div>
+      </div>
+
+      <nav className="bg-custom-bg">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex h-14">
+            <div className="flex space-x-4">
+              {links.map((link) => {
+                const Icon = link.icon;
+                const isActive = location.pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    to={link.href}
                     className={cn(
-                      isActive && "bg-primary/10 text-primary"
+                      "inline-flex items-center px-3 py-1 text-sm font-medium transition-all duration-200 rounded-lg bg-custom-element",
+                      isActive
+                        ? "bg-primary/10 text-primary border border-primary/20"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     )}
                   >
-                    <Link to={link.href}>
-                      <Icon className={cn(
-                        "w-4 h-4 mr-2",
-                        isActive ? "text-primary" : "text-muted-foreground"
-                      )} />
-                      <span>{link.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter className="border-t border-border/10 p-4">
-          <Link
-            to="/login"
-            className="flex items-center px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg hover:bg-accent/50"
-          >
-            <LogIn className="w-4 h-4 mr-2" />
-            Login
-          </Link>
-        </SidebarFooter>
-      </Sidebar>
-    </SidebarProvider>
+                    <Icon className={cn("w-4 h-4 mr-2 transition-colors", 
+                      isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                    )} />
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
   );
 });
 

@@ -6,7 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Navigation from "./components/Navigation";
+import Footer from "./components/Footer";
 
+// Lazy load components
 const Index = lazy(() => import("./pages/Index"));
 const NewDashboard = lazy(() => import("./pages/NewDashboard"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -33,9 +35,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="flex h-screen w-full">
+          <div className="min-h-screen bg-white flex flex-col">
             <Navigation />
-            <main className="flex-1 overflow-y-auto bg-background">
+            <div className="flex-1">
               <Suspense fallback={
                 <div className="flex items-center justify-center h-full">
                   <div className="w-8 h-8 rounded-full border-4 border-primary border-r-transparent animate-spin"></div>
@@ -56,7 +58,8 @@ const App = () => (
                   <Route path="/login" element={<Login />} />
                 </Routes>
               </Suspense>
-            </main>
+            </div>
+            <Footer />
           </div>
         </BrowserRouter>
       </TooltipProvider>
