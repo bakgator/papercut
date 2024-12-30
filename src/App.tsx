@@ -23,7 +23,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 30, // 30 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes
     },
   },
 });
@@ -40,7 +40,7 @@ const App = () => (
             <div className="flex-1">
               <Suspense fallback={
                 <div className="flex items-center justify-center h-full">
-                  <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+                  <div className="w-8 h-8 rounded-full border-4 border-primary border-r-transparent animate-spin"></div>
                 </div>
               }>
                 <Routes>
