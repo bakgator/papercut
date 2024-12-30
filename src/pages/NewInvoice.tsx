@@ -70,11 +70,11 @@ const NewInvoice = () => {
         .split("T")[0],
       items: [
         {
-          description: "",
-          quantity: 1,
-          unitPrice: 0,
-          total: 0,
-        },
+          description: "", // Required string
+          quantity: 1,    // Required number
+          unitPrice: 0,   // Required number
+          total: 0        // Required number
+        }
       ],
       notes: "",
     },
