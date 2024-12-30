@@ -110,7 +110,7 @@ export const RevenueOverview = () => {
   const maxAmount = Math.max(...chartData.map(item => item.amount));
 
   return (
-    <Card className="overflow-hidden border border-border/50 bg-gradient-to-br from-card/50 to-background backdrop-blur-sm">
+    <Card className="overflow-hidden border-gray-200/50 bg-gradient-to-br from-white via-gray-50 to-gray-100 backdrop-blur-sm">
       <CardHeader className="space-y-4">
         <CardTitle className="font-mono text-xl tracking-tight">Revenue Overview</CardTitle>
         <TimeframeToggle value={timeframe} onValueChange={setTimeframe} />

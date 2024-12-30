@@ -13,11 +13,11 @@ export const TimeframeToggle = ({ value, onValueChange }: TimeframeToggleProps) 
       onValueChange={(value) => value && onValueChange(value)} 
       className="justify-start space-x-2"
     >
-      <ToggleGroupItem value="day" className="font-mono hover:bg-primary/20 data-[state=on]:bg-primary/30">Day</ToggleGroupItem>
-      <ToggleGroupItem value="week" className="font-mono hover:bg-primary/20 data-[state=on]:bg-primary/30">Week</ToggleGroupItem>
-      <ToggleGroupItem value="month" className="font-mono hover:bg-primary/20 data-[state=on]:bg-primary/30">Month</ToggleGroupItem>
-      <ToggleGroupItem value="year" className="font-mono hover:bg-primary/20 data-[state=on]:bg-primary/30">Year</ToggleGroupItem>
-      <ToggleGroupItem value="all" className="font-mono hover:bg-primary/20 data-[state=on]:bg-primary/30">All time</ToggleGroupItem>
+      <ToggleGroupItem value="day" className="font-mono bg-white hover:bg-gray-50 data-[state=on]:bg-gray-100">Day</ToggleGroupItem>
+      <ToggleGroupItem value="week" className="font-mono bg-white hover:bg-gray-50 data-[state=on]:bg-gray-100">Week</ToggleGroupItem>
+      <ToggleGroupItem value="month" className="font-mono bg-white hover:bg-gray-50 data-[state=on]:bg-gray-100">Month</ToggleGroupItem>
+      <ToggleGroupItem value="year" className="font-mono bg-white hover:bg-gray-50 data-[state=on]:bg-gray-100">Year</ToggleGroupItem>
+      <ToggleGroupItem value="all" className="font-mono bg-white hover:bg-gray-50 data-[state=on]:bg-gray-100">All time</ToggleGroupItem>
     </ToggleGroup>
   );
 };
