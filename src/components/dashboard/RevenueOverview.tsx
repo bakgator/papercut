@@ -35,20 +35,28 @@ export const RevenueOverview = () => {
 
     switch (timeframe) {
       case "day":
-        start = subMonths(now, 1);
+        start = new Date(now.setHours(0, 0, 0, 0));
         intervals = eachDayOfInterval({ start, end: now });
         break;
       case "week":
-        start = subMonths(now, 3);
-        intervals = eachWeekOfInterval({ start, end: now });
+        start = subWeeks(now, 1);
+        intervals = eachDayOfInterval({ start, end: now });
         break;
       case "month":
+        start = subMonths(now, 1);
+        intervals = eachDayOfInterval({ start, end: now });
+        break;
+      case "year":
         start = subYears(now, 1);
         intervals = eachMonthOfInterval({ start, end: now });
         break;
-      case "year":
-        start = subYears(now, 3);
-        intervals = eachYearOfInterval({ start, end: now });
+      case "all":
+        // Get the date of the first invoice or default to 3 years ago
+        const firstInvoiceDate = invoices.length > 0 
+          ? new Date(Math.min(...invoices.map(inv => new Date(inv.date).getTime())))
+          : subYears(now, 3);
+        start = firstInvoiceDate;
+        intervals = eachMonthOfInterval({ start, end: now });
         break;
       default:
         start = subMonths(now, 1);
@@ -62,13 +70,14 @@ export const RevenueOverview = () => {
           nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
           break;
         case "week":
-          nextDate = new Date(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+          nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
           break;
         case "month":
-          nextDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+          nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
           break;
         case "year":
-          nextDate = new Date(date.getFullYear() + 1, 0, 1);
+        case "all":
+          nextDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
           break;
         default:
           nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
@@ -84,16 +93,19 @@ export const RevenueOverview = () => {
       let label: string;
       switch (timeframe) {
         case "day":
-          label = format(date, "MMM d");
+          label = "This day";
           break;
         case "week":
-          label = `Week ${format(date, "w")}`;
+          label = "This week";
           break;
         case "month":
-          label = format(date, "MMM yyyy");
+          label = "This month";
           break;
         case "year":
-          label = format(date, "yyyy");
+          label = "This year";
+          break;
+        case "all":
+          label = format(date, "MMM yyyy");
           break;
         default:
           label = format(date, "MMM d");
@@ -121,10 +133,11 @@ export const RevenueOverview = () => {
           onValueChange={(value) => value && setTimeframe(value)} 
           className="justify-start"
         >
-          <ToggleGroupItem value="day" className="font-mono">Day</ToggleGroupItem>
-          <ToggleGroupItem value="week" className="font-mono">Week</ToggleGroupItem>
-          <ToggleGroupItem value="month" className="font-mono">Month</ToggleGroupItem>
-          <ToggleGroupItem value="year" className="font-mono">Year</ToggleGroupItem>
+          <ToggleGroupItem value="day" className="font-mono">This day</ToggleGroupItem>
+          <ToggleGroupItem value="week" className="font-mono">This week</ToggleGroupItem>
+          <ToggleGroupItem value="month" className="font-mono">This month</ToggleGroupItem>
+          <ToggleGroupItem value="year" className="font-mono">This year</ToggleGroupItem>
+          <ToggleGroupItem value="all" className="font-mono">All time</ToggleGroupItem>
         </ToggleGroup>
       </CardHeader>
       <CardContent className="h-[300px]">
@@ -149,7 +162,7 @@ export const RevenueOverview = () => {
                 hide={false}
                 stroke="currentColor"
                 fontSize={12}
-                ticks={[maxAmount]} // Only show the highest value
+                ticks={[maxAmount]}
               />
               <Line 
                 type="monotone"
