@@ -23,7 +23,11 @@ interface FormValues {
   paymentTerms: string;
 }
 
-const InvoiceForm = () => {
+interface Props {
+  existingInvoiceId?: string;
+}
+
+const InvoiceForm = ({ existingInvoiceId }: Props) => {
   const navigate = useNavigate();
   const methods = useForm<FormValues>({
     defaultValues: {
@@ -92,9 +96,11 @@ const InvoiceForm = () => {
 
   // Create a mock invoice object for InvoiceActions
   const mockInvoice = {
-    id: "new",
+    id: existingInvoiceId || "new",
     status: "draft" as const
   };
+
+  const buttonLabel = existingInvoiceId ? "Update Invoice" : "Save & Create";
 
   return (
     <FormProvider {...methods}>
@@ -118,7 +124,7 @@ const InvoiceForm = () => {
             className="bg-primary hover:bg-primary/90"
           >
             <SaveIcon className="w-4 h-4 mr-2" />
-            Save Invoice
+            {buttonLabel}
           </Button>
         </div>
         <InvoiceActions 
