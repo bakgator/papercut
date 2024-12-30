@@ -16,14 +16,14 @@ const Navigation = () => {
   return (
     <div className="flex flex-col">
       {/* Logo Section */}
-      <div className="bg-white border-b py-4">
+      <div className="bg-gradient-to-br from-background to-card/50 backdrop-blur-sm border-b border-border/50 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="text-primary w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10">
+          <div className="flex items-center gap-4">
+            <div className="text-primary w-12 h-12 flex items-center justify-center rounded-xl bg-primary/10 backdrop-blur-sm border border-primary/20">
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Papertrail</h1>
+              <h1 className="text-2xl font-bold font-mono tracking-tight">Papertrail</h1>
               <p className="text-sm text-muted-foreground">Keep track of your paperwork like a pro</p>
             </div>
           </div>
@@ -31,24 +31,27 @@ const Navigation = () => {
       </div>
 
       {/* Navigation Links */}
-      <nav className="bg-white border-b">
+      <nav className="bg-gradient-to-br from-background to-card/50 backdrop-blur-sm border-b border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16">
             <div className="flex space-x-8">
               {links.map((link) => {
                 const Icon = link.icon;
+                const isActive = location.pathname === link.href;
                 return (
                   <Link
                     key={link.href}
                     to={link.href}
                     className={cn(
-                      "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium",
-                      location.pathname === link.href
+                      "inline-flex items-center px-3 py-2 border-b-2 text-sm font-medium transition-all duration-200",
+                      isActive
                         ? "border-primary text-primary"
-                        : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                        : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
                     )}
                   >
-                    <Icon className="w-4 h-4 mr-2" />
+                    <Icon className={cn("w-4 h-4 mr-2 transition-colors", 
+                      isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                    )} />
                     {link.label}
                   </Link>
                 );
