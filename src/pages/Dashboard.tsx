@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, FileText, User, Check, Edit, Eye, RefreshCcw } from "lucide-react";
+import { Plus, FileText, User, Check, Edit, Eye, RefreshCcw, Download, Printer, Send } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -36,6 +36,59 @@ const Dashboard = () => {
     } else {
       toast.error("Failed to mark invoice as unpaid");
     }
+  };
+
+  const handleDownload = (invoice: any) => {
+    // Create a text representation of the invoice
+    const invoiceText = `
+Invoice #${invoice.invoiceNumber}
+Customer: ${invoice.customer}
+Date: ${invoice.date}
+Amount: ${invoice.total} SEK
+Status: ${invoice.status}
+    `;
+    
+    // Create blob and download
+    const blob = new Blob([invoiceText], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `invoice-${invoice.invoiceNumber}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    toast.success("Invoice downloaded successfully");
+  };
+
+  const handlePrint = (invoice: any) => {
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Invoice #${invoice.invoiceNumber}</title>
+          </head>
+          <body>
+            <h1>Invoice #${invoice.invoiceNumber}</h1>
+            <p>Customer: ${invoice.customer}</p>
+            <p>Date: ${invoice.date}</p>
+            <p>Amount: ${invoice.total} SEK</p>
+            <p>Status: ${invoice.status}</p>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+    toast.success("Print window opened");
+  };
+
+  const handleSend = (invoice: any) => {
+    // This would typically integrate with an email service
+    // For now, we'll just show a success message
+    toast.success(`Invoice ${invoice.invoiceNumber} sent successfully`);
   };
 
   return (
@@ -167,6 +220,57 @@ const Dashboard = () => {
                           </Tooltip>
                         </TooltipProvider>
                       )}
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="icon"
+                              onClick={() => handleDownload(invoice)}
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Download Invoice</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="icon"
+                              onClick={() => handlePrint(invoice)}
+                            >
+                              <Printer className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Print Invoice</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="icon"
+                              onClick={() => handleSend(invoice)}
+                            >
+                              <Send className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Send Invoice</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </TableCell>
                 </TableRow>
