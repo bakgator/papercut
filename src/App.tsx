@@ -10,6 +10,7 @@ import Customers from "./pages/Customers";
 import NewCustomer from "./pages/NewCustomer";
 import NewInvoice from "./pages/NewInvoice";
 import Navigation from "./components/Navigation";
+import Footer from "./components/Footer";
 import Paperwork from "./pages/Paperwork";
 import About from "./pages/About";
 
@@ -21,21 +22,24 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 flex flex-col">
           <Navigation />
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<NewDashboard />} />
-            <Route path="/invoices" element={<Dashboard />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/customers/new" element={<NewCustomer />} />
-            <Route path="/customers/:id/edit" element={<NewCustomer />} />
-            <Route path="/invoices/new" element={<NewInvoice />} />
-            <Route path="/invoices/:id/edit" element={<NewInvoice />} />
-            <Route path="/invoices/:id" element={<Index />} />
-            <Route path="/paperwork" element={<Paperwork />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
+          <div className="flex-1">
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<NewDashboard />} />
+              <Route path="/invoices" element={<Dashboard />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/customers/new" element={<NewCustomer />} />
+              <Route path="/customers/:id/edit" element={<NewCustomer />} />
+              <Route path="/invoices/new" element={<NewInvoice />} />
+              <Route path="/invoices/:id/edit" element={<NewInvoice />} />
+              <Route path="/invoices/:id" element={<Index />} />
+              <Route path="/paperwork" element={<Paperwork />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
+          </div>
+          <Footer />
         </div>
       </BrowserRouter>
     </TooltipProvider>
