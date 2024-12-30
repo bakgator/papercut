@@ -20,10 +20,10 @@ const NewDashboard = () => {
   });
 
   return (
-    <div className="h-full">
+    <div className="min-h-full p-0">
       <div className="space-y-6">
         <div className="border-b">
-          <h1 className="text-2xl font-bold p-4">Dashboard Overview</h1>
+          <h1 className="text-2xl font-bold font-mono p-4">Dashboard Overview</h1>
         </div>
         
         <div className="px-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
