@@ -125,9 +125,13 @@ export const RevenueOverview = () => {
         </ToggleGroup>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[300px] w-full">
           <ChartContainer config={chartConfig}>
-            <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <LineChart 
+              data={chartData} 
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              height={260}
+            >
               <XAxis 
                 dataKey="date" 
                 axisLine={false}
