@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ChartContainer } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 import { format, startOfDay, subMonths, subWeeks, subYears, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, eachYearOfInterval } from "date-fns";
 import { store } from "@/lib/store";
 
@@ -127,12 +127,26 @@ export const RevenueOverview = () => {
       <CardContent>
         <div className="h-[300px]">
           <ChartContainer config={chartConfig}>
-            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-              <XAxis dataKey="date" />
+            <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <XAxis 
+                dataKey="date" 
+                axisLine={false}
+                tickLine={false}
+              />
               <YAxis 
                 tickFormatter={(value) => formatCurrency(Number(value))}
+                axisLine={false}
+                tickLine={false}
               />
-              <Bar dataKey="amount" fill="currentColor" />
+              <Line 
+                type="monotone"
+                dataKey="amount"
+                stroke="currentColor"
+                strokeWidth={2}
+                dot={{ r: 4, strokeWidth: 2 }}
+                activeDot={{ r: 6, strokeWidth: 2 }}
+                strokeDasharray="5 5"
+              />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
@@ -145,7 +159,7 @@ export const RevenueOverview = () => {
                   return null;
                 }}
               />
-            </BarChart>
+            </LineChart>
           </ChartContainer>
         </div>
       </CardContent>
