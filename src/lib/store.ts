@@ -29,6 +29,14 @@ interface Invoice {
   notes?: string;
 }
 
+interface Purchase {
+  id: string;
+  date: string;
+  description: string;
+  amount: number;
+  imageUrl: string;
+}
+
 class Store {
   private customers: Customer[] = [
     {
@@ -63,6 +71,8 @@ class Store {
       paymentTerms: "Net 30",
     }
   ];
+
+  private purchases: Purchase[] = [];
 
   private getNextInvoiceNumber() {
     const currentYear = new Date().getFullYear();
@@ -136,6 +146,37 @@ class Store {
     const invoice = this.invoices.find(inv => inv.id === id);
     if (invoice) {
       Object.assign(invoice, { ...invoiceData, id, invoiceNumber: invoice.invoiceNumber });
+      return true;
+    }
+    return false;
+  }
+
+  getPurchases() {
+    return this.purchases;
+  }
+
+  addPurchase(purchaseData: Omit<Purchase, 'id'>) {
+    const newPurchase = {
+      ...purchaseData,
+      id: (this.purchases.length + 1).toString(),
+    };
+    this.purchases.push(newPurchase);
+    return newPurchase;
+  }
+
+  updatePurchase(id: string, purchaseData: Omit<Purchase, 'id'>) {
+    const index = this.purchases.findIndex(purchase => purchase.id === id);
+    if (index !== -1) {
+      this.purchases[index] = { ...purchaseData, id };
+      return true;
+    }
+    return false;
+  }
+
+  deletePurchase(id: string) {
+    const index = this.purchases.findIndex(purchase => purchase.id === id);
+    if (index !== -1) {
+      this.purchases.splice(index, 1);
       return true;
     }
     return false;
