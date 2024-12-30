@@ -81,7 +81,7 @@
   }
 
   .section-padding {
-    @apply py-20 px-6 md:px-12 lg:px-24;
+    @apply py-24 px-8 md:px-16 lg:px-24;
   }
 
   .fade-in {
@@ -93,6 +93,6 @@
   }
 
   .card-gradient {
-    @apply bg-gradient-to-br from-card/50 to-background backdrop-blur-sm border border-border/50 shadow-sm;
+    @apply bg-gradient-to-br from-card/50 to-background backdrop-blur-sm border border-border/50 shadow-sm p-8 rounded-2xl;
   }
 }
