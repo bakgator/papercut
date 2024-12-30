@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { InvoiceHeader } from "./InvoiceHeader";
 import { InvoiceCustomerSection } from "./InvoiceCustomerSection";
@@ -79,6 +79,15 @@ const InvoiceForm = () => {
     methods.setValue("items", items);
   };
 
+  // Memoize calculations for totals
+  const totals = useMemo(() => {
+    const items = methods.watch("items");
+    const subtotal = items.reduce((acc, item) => acc + item.total, 0);
+    const vatAmount = subtotal * 0.25;
+    const total = subtotal * 1.25;
+    return { subtotal, vatAmount, total };
+  }, [methods.watch("items")]);
+
   // Create a mock invoice object for InvoiceActions
   const mockInvoice = {
     id: "new",
@@ -96,10 +105,10 @@ const InvoiceForm = () => {
         />
         <InvoiceNotesSection />
         <InvoiceTotalsSection 
-          subtotal={methods.watch("items").reduce((acc, item) => acc + item.total, 0)}
+          subtotal={totals.subtotal}
           vatRate={25}
-          vatAmount={methods.watch("items").reduce((acc, item) => acc + item.total, 0) * 0.25}
-          total={methods.watch("items").reduce((acc, item) => acc + item.total, 0) * 1.25}
+          vatAmount={totals.vatAmount}
+          total={totals.total}
         />
         <InvoiceActions 
           invoice={mockInvoice}

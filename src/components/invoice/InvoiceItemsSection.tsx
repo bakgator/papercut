@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,7 +15,7 @@ interface InvoiceItemsSectionProps {
   updateItemTotal: (index: number) => void;
 }
 
-export const InvoiceItemsSection: React.FC<InvoiceItemsSectionProps> = ({ updateItemTotal }) => {
+const InvoiceItemsSection = memo(({ updateItemTotal }: InvoiceItemsSectionProps) => {
   const form = useFormContext();
 
   const addItem = () => {
@@ -142,4 +142,8 @@ export const InvoiceItemsSection: React.FC<InvoiceItemsSectionProps> = ({ update
       ))}
     </div>
   );
-};
+});
+
+InvoiceItemsSection.displayName = "InvoiceItemsSection";
+
+export { InvoiceItemsSection };
