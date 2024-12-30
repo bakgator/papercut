@@ -7,9 +7,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import { format, startOfDay, startOfWeek, startOfMonth, startOfYear, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, eachYearOfInterval, subMonths, subWeeks, subYears } from "date-fns";
 
 const NewDashboard = () => {
@@ -108,41 +107,41 @@ const NewDashboard = () => {
   const chartData = getTimeframeData();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+    <div className="min-h-screen bg-background p-4 sm:p-8 fade-in">
       <div className="max-w-7xl mx-auto space-y-8">
-        <h1 className="text-2xl font-bold">Dashboard Overview</h1>
+        <h1 className="text-2xl font-bold font-mono">Dashboard Overview</h1>
         
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Card>
+          <Card className="card-gradient">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Invoices</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{totalInvoices}</div>
+              <div className="text-2xl font-bold font-mono">{totalInvoices}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="card-gradient">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Paid Invoices</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{paidInvoices}</div>
+              <div className="text-2xl font-bold text-green-600 font-mono">{paidInvoices}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="card-gradient">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Unpaid Invoices</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-yellow-600">{unpaidInvoices}</div>
+              <div className="text-2xl font-bold text-yellow-600 font-mono">{unpaidInvoices}</div>
             </CardContent>
           </Card>
         </div>
 
         {upcomingDueInvoices.length > 0 && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="glass">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Attention Required</AlertTitle>
             <AlertDescription>
@@ -151,29 +150,20 @@ const NewDashboard = () => {
           </Alert>
         )}
 
-        <Card>
+        <Card className="card-gradient">
           <CardHeader>
             <CardTitle>Revenue Overview</CardTitle>
-            <ToggleGroup type="single" value={timeframe} onValueChange={(value) => value && setTimeframe(value)}>
-              <ToggleGroupItem value="day">Day</ToggleGroupItem>
-              <ToggleGroupItem value="week">Week</ToggleGroupItem>
-              <ToggleGroupItem value="month">Month</ToggleGroupItem>
-              <ToggleGroupItem value="year">Year</ToggleGroupItem>
+            <ToggleGroup type="single" value={timeframe} onValueChange={(value) => value && setTimeframe(value)} className="justify-start">
+              <ToggleGroupItem value="day" className="font-mono">Day</ToggleGroupItem>
+              <ToggleGroupItem value="week" className="font-mono">Week</ToggleGroupItem>
+              <ToggleGroupItem value="month" className="font-mono">Month</ToggleGroupItem>
+              <ToggleGroupItem value="year" className="font-mono">Year</ToggleGroupItem>
             </ToggleGroup>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <ChartContainer
-                config={{
-                  amount: {
-                    theme: {
-                      light: "hsl(var(--primary))",
-                      dark: "hsl(var(--primary))",
-                    },
-                  },
-                }}
-              >
-                <BarChart data={chartData}>
+              <ChartContainer>
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                   <XAxis dataKey="date" />
                   <YAxis 
                     tickFormatter={(value) => 
@@ -186,9 +176,23 @@ const NewDashboard = () => {
                     }
                   />
                   <Bar dataKey="amount" fill="currentColor" />
-                  <ChartTooltip>
-                    <ChartTooltipContent />
-                  </ChartTooltip>
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-popover text-popover-foreground p-2 rounded-sm border border-border">
+                            <p className="font-mono">{`${new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: 'SEK',
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            }).format(payload[0].value)}`}</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                 </BarChart>
               </ChartContainer>
             </div>
