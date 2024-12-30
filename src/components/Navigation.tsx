@@ -27,7 +27,7 @@ const Navigation = () => {
       </div>
 
       {/* Navigation Links */}
-      <nav className="bg-custom-element">
+      <nav className="bg-custom-bg">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="flex h-14">
             <div className="flex space-x-4">
