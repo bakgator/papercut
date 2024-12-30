@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ChartContainer } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { format, startOfDay, subMonths, subWeeks, subYears, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, eachYearOfInterval } from "date-fns";
+import { format, startOfDay, subMonths, subWeeks, subYears, eachDayOfInterval, eachMonthOfInterval, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, addHours, startOfHour } from "date-fns";
 import { store } from "@/lib/store";
 
 const chartConfig = {
@@ -34,23 +34,34 @@ export const RevenueOverview = () => {
     let intervals: Date[];
 
     switch (timeframe) {
-      case "day":
-        start = new Date(now.setHours(0, 0, 0, 0));
-        intervals = eachDayOfInterval({ start, end: now });
+      case "day": {
+        // Get start of current day and create 6 intervals (every 4 hours)
+        start = startOfDay(now);
+        intervals = Array.from({ length: 6 }, (_, i) => addHours(start, i * 4));
         break;
-      case "week":
-        start = subWeeks(now, 1);
-        intervals = eachDayOfInterval({ start, end: now });
+      }
+      case "week": {
+        // Get Monday to Sunday of current week
+        start = startOfWeek(now, { weekStartsOn: 1 }); // 1 = Monday
+        const end = endOfWeek(now, { weekStartsOn: 1 });
+        intervals = eachDayOfInterval({ start, end });
         break;
-      case "month":
-        start = subMonths(now, 1);
-        intervals = eachDayOfInterval({ start, end: now });
+      }
+      case "month": {
+        // Get all days in current month
+        start = startOfMonth(now);
+        const end = endOfMonth(now);
+        intervals = eachDayOfInterval({ start, end });
         break;
-      case "year":
-        start = subYears(now, 1);
-        intervals = eachMonthOfInterval({ start, end: now });
+      }
+      case "year": {
+        // Get all months in current year
+        start = startOfYear(now);
+        const end = endOfYear(now);
+        intervals = eachMonthOfInterval({ start, end });
         break;
-      case "all":
+      }
+      case "all": {
         // Get the date of the first invoice or default to 3 years ago
         const firstInvoiceDate = invoices.length > 0 
           ? new Date(Math.min(...invoices.map(inv => new Date(inv.date).getTime())))
@@ -58,26 +69,26 @@ export const RevenueOverview = () => {
         start = firstInvoiceDate;
         intervals = eachMonthOfInterval({ start, end: now });
         break;
+      }
       default:
-        start = subMonths(now, 1);
-        intervals = eachDayOfInterval({ start, end: now });
+        start = startOfMonth(now);
+        const end = endOfMonth(now);
+        intervals = eachDayOfInterval({ start, end });
     }
 
     return intervals.map(date => {
       let nextDate: Date;
       switch (timeframe) {
         case "day":
-          nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
+          nextDate = addHours(date, 4); // Next 4-hour interval
           break;
         case "week":
-          nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
-          break;
         case "month":
-          nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
+          nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000)); // Next day
           break;
         case "year":
         case "all":
-          nextDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+          nextDate = new Date(date.getFullYear(), date.getMonth() + 1, 1); // Next month
           break;
         default:
           nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
@@ -93,16 +104,16 @@ export const RevenueOverview = () => {
       let label: string;
       switch (timeframe) {
         case "day":
-          label = "This day";
+          label = format(date, "HH:mm");
           break;
         case "week":
-          label = "This week";
+          label = format(date, "EEE"); // Mon, Tue, etc.
           break;
         case "month":
-          label = "This month";
+          label = format(date, "d"); // Day of month
           break;
         case "year":
-          label = "This year";
+          label = format(date, "MMM"); // Jan, Feb, etc.
           break;
         case "all":
           label = format(date, "MMM yyyy");
@@ -119,8 +130,6 @@ export const RevenueOverview = () => {
   };
 
   const chartData = getTimeframeData();
-  
-  // Find the maximum value for Y axis
   const maxAmount = Math.max(...chartData.map(item => item.amount));
 
   return (
@@ -133,10 +142,10 @@ export const RevenueOverview = () => {
           onValueChange={(value) => value && setTimeframe(value)} 
           className="justify-start"
         >
-          <ToggleGroupItem value="day" className="font-mono">This day</ToggleGroupItem>
-          <ToggleGroupItem value="week" className="font-mono">This week</ToggleGroupItem>
-          <ToggleGroupItem value="month" className="font-mono">This month</ToggleGroupItem>
-          <ToggleGroupItem value="year" className="font-mono">This year</ToggleGroupItem>
+          <ToggleGroupItem value="day" className="font-mono">Day</ToggleGroupItem>
+          <ToggleGroupItem value="week" className="font-mono">Week</ToggleGroupItem>
+          <ToggleGroupItem value="month" className="font-mono">Month</ToggleGroupItem>
+          <ToggleGroupItem value="year" className="font-mono">Year</ToggleGroupItem>
           <ToggleGroupItem value="all" className="font-mono">All time</ToggleGroupItem>
         </ToggleGroup>
       </CardHeader>
