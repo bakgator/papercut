@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { ChartContainer } from "@/components/ui/chart";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -7,7 +8,7 @@ interface RevenueChartProps {
   formatCurrency: (value: number) => string;
 }
 
-export const RevenueChart = ({ data, maxAmount, formatCurrency }: RevenueChartProps) => {
+export const RevenueChart = memo(({ data, maxAmount, formatCurrency }: RevenueChartProps) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ChartContainer config={{
@@ -64,4 +65,6 @@ export const RevenueChart = ({ data, maxAmount, formatCurrency }: RevenueChartPr
       </ChartContainer>
     </ResponsiveContainer>
   );
-};
+});
+
+RevenueChart.displayName = "RevenueChart";

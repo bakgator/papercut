@@ -1,27 +1,27 @@
-import React from "react";
+import React, { memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { FileText, User, BookOpen, LayoutDashboard, LogIn } from "lucide-react";
 
-const Navigation = () => {
-  const location = useLocation();
+const links = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/invoices", label: "Invoices", icon: FileText },
+  { href: "/customers", label: "Customers", icon: User },
+  { href: "/paperwork", label: "Paperwork", icon: BookOpen },
+];
 
-  const links = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/invoices", label: "Invoices", icon: FileText },
-    { href: "/customers", label: "Customers", icon: User },
-    { href: "/paperwork", label: "Paperwork", icon: BookOpen },
-  ];
+const Navigation = memo(() => {
+  const location = useLocation();
 
   return (
     <div className="flex flex-col">
-      {/* Logo Section */}
       <div className="bg-custom-bg py-6">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex justify-between items-center">
           <img 
             src="/lovable-uploads/c0b9f3b4-6f7e-47a5-ab17-de467377618c.png" 
             alt="Logo" 
             className="h-12"
+            loading="eager"
           />
           <Link
             to="/login"
@@ -33,7 +33,6 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Navigation Links */}
       <nav className="bg-custom-bg">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="flex h-14">
@@ -65,6 +64,8 @@ const Navigation = () => {
       </nav>
     </div>
   );
-};
+});
+
+Navigation.displayName = "Navigation";
 
 export default Navigation;

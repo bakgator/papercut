@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format, startOfDay, eachDayOfInterval, eachMonthOfInterval, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, addHours, startOfHour, subDays } from "date-fns";
 import { store } from "@/lib/store";
@@ -18,7 +18,7 @@ export const RevenueOverview = () => {
   const [timeframe, setTimeframe] = useState("month");
   const invoices = store.getInvoices();
 
-  const getTimeframeData = () => {
+  const getTimeframeData = useCallback(() => {
     const now = new Date();
     let start: Date;
     let intervals: Date[];
@@ -104,10 +104,10 @@ export const RevenueOverview = () => {
         amount: total
       };
     });
-  };
+  }, [timeframe, invoices]);
 
-  const chartData = getTimeframeData();
-  const maxAmount = Math.max(...chartData.map(item => item.amount));
+  const chartData = useMemo(() => getTimeframeData(), [getTimeframeData]);
+  const maxAmount = useMemo(() => Math.max(...chartData.map(item => item.amount)), [chartData]);
 
   return (
     <Card className="overflow-hidden border-gray-200/50 bg-custom-element">
