@@ -21,7 +21,7 @@ const NewDashboard = () => {
 
   return (
     <div className="min-h-screen fade-in">
-      <div className="p-6 space-y-8">
+      <div className="p-4 space-y-8">
         <h1 className="text-2xl font-bold font-mono text-left">Dashboard Overview</h1>
         
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
