@@ -20,12 +20,12 @@ const NewDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 p-4 sm:p-8 fade-in">
+    <div className="min-h-screen bg-custom-bg p-4 sm:p-8 fade-in">
       <div className="max-w-7xl mx-auto space-y-8">
         <h1 className="text-2xl font-bold font-mono">Dashboard Overview</h1>
         
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Card className="bg-gradient-to-br from-white via-gray-50 to-gray-100 border-gray-200/50 shadow-sm">
+          <Card className="bg-gradient-to-br from-white/80 via-white/50 to-white/30 border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Invoices</CardTitle>
             </CardHeader>
@@ -34,7 +34,7 @@ const NewDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-white via-gray-50 to-gray-100 border-gray-200/50 shadow-sm">
+          <Card className="bg-gradient-to-br from-white/80 via-white/50 to-white/30 border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Paid Invoices</CardTitle>
             </CardHeader>
@@ -43,7 +43,7 @@ const NewDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-white via-gray-50 to-gray-100 border-gray-200/50 shadow-sm">
+          <Card className="bg-gradient-to-br from-white/80 via-white/50 to-white/30 border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Unpaid Invoices</CardTitle>
             </CardHeader>
@@ -54,7 +54,7 @@ const NewDashboard = () => {
         </div>
 
         {upcomingDueInvoices.length > 0 && (
-          <Alert variant="destructive" className="bg-gradient-to-br from-gray-100 via-gray-50 to-white border border-gray-200/50 shadow-sm">
+          <Alert variant="destructive" className="bg-gradient-to-br from-white/80 via-white/50 to-white/30 border-gray-200/50 shadow-sm backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-3">
                 <AlertCircle className="h-4 w-4 mt-1" />
