@@ -18,17 +18,11 @@ const Navigation = () => {
       {/* Logo Section */}
       <div className="bg-gradient-to-br from-background via-background to-background/80 backdrop-blur-sm border-b border-border/50 py-6">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="flex items-center gap-6">
-            <img 
-              src="/lovable-uploads/c0b9f3b4-6f7e-47a5-ab17-de467377618c.png" 
-              alt="Papercut Logo" 
-              className="h-12"
-            />
-            <div>
-              <h1 className="text-3xl font-bold font-mono tracking-tight">Papercut</h1>
-              <p className="text-base text-muted-foreground">Keep track of your paperwork like a pro</p>
-            </div>
-          </div>
+          <img 
+            src="/lovable-uploads/c0b9f3b4-6f7e-47a5-ab17-de467377618c.png" 
+            alt="Logo" 
+            className="h-12"
+          />
         </div>
       </div>
 
