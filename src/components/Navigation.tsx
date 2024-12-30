@@ -39,7 +39,7 @@ const Navigation = () => {
                     key={link.href}
                     to={link.href}
                     className={cn(
-                      "inline-flex items-center px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg bg-custom-element",
+                      "inline-flex items-center px-3 py-1 text-sm font-medium transition-all duration-200 rounded-lg bg-custom-element",
                       isActive
                         ? "bg-primary/10 text-primary border border-primary/20"
                         : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
