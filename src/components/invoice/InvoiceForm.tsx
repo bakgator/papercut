@@ -7,6 +7,8 @@ import { InvoiceItemsSection } from "./InvoiceItemsSection";
 import { InvoiceNotesSection } from "./InvoiceNotesSection";
 import { InvoiceTotalsSection } from "./InvoiceTotalsSection";
 import { InvoiceActions } from "./InvoiceActions";
+import { Button } from "@/components/ui/button";
+import { SaveIcon } from "lucide-react";
 import { store } from "@/lib/store";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -110,6 +112,15 @@ const InvoiceForm = () => {
           vatAmount={totals.vatAmount}
           total={totals.total}
         />
+        <div className="flex justify-end space-x-4">
+          <Button
+            type="submit"
+            className="bg-primary hover:bg-primary/90"
+          >
+            <SaveIcon className="w-4 h-4 mr-2" />
+            Save Invoice
+          </Button>
+        </div>
         <InvoiceActions 
           invoice={mockInvoice}
           onMarkAsPaid={() => {}}
