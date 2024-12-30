@@ -79,6 +79,14 @@ class Store {
     return this.invoices;
   }
 
+  getCustomer(id: string) {
+    return this.customers.find(customer => customer.id === id);
+  }
+
+  getInvoice(id: string) {
+    return this.invoices.find(invoice => invoice.id === id);
+  }
+
   addCustomer(customerData: Omit<Customer, 'id'>) {
     const newCustomer = {
       ...customerData,
@@ -96,6 +104,33 @@ class Store {
     };
     this.invoices.push(newInvoice);
     return newInvoice;
+  }
+
+  markInvoiceAsPaid(id: string) {
+    const invoice = this.invoices.find(inv => inv.id === id);
+    if (invoice) {
+      invoice.status = 'paid';
+      return true;
+    }
+    return false;
+  }
+
+  updateCustomer(id: string, customerData: Omit<Customer, 'id'>) {
+    const index = this.customers.findIndex(customer => customer.id === id);
+    if (index !== -1) {
+      this.customers[index] = { ...customerData, id };
+      return true;
+    }
+    return false;
+  }
+
+  updateInvoice(id: string, invoiceData: Omit<Invoice, 'id' | 'invoiceNumber'>) {
+    const invoice = this.invoices.find(inv => inv.id === id);
+    if (invoice) {
+      Object.assign(invoice, { ...invoiceData, id, invoiceNumber: invoice.invoiceNumber });
+      return true;
+    }
+    return false;
   }
 }
 

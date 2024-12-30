@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, FileText, User, Check } from "lucide-react";
+import { Plus, FileText, User, Check, Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -11,9 +11,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { store } from "@/lib/store";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const invoices = store.getInvoices();
+
+  const handleMarkAsPaid = (id: string) => {
+    if (store.markInvoiceAsPaid(id)) {
+      toast.success("Invoice marked as paid");
+    } else {
+      toast.error("Failed to mark invoice as paid");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
@@ -85,10 +94,22 @@ const Dashboard = () => {
                           View
                         </Link>
                       </Button>
-                      <Button variant="outline" size="sm">
-                        <Check className="w-4 h-4" />
-                        Mark Paid
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to={`/invoices/${invoice.id}/edit`}>
+                          <Edit className="w-4 h-4" />
+                          Edit
+                        </Link>
                       </Button>
+                      {invoice.status === 'unpaid' && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleMarkAsPaid(invoice.id)}
+                        >
+                          <Check className="w-4 h-4" />
+                          Mark Paid
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
