@@ -20,8 +20,8 @@ const NewDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-custom-bg p-4 fade-in">
-      <div className="max-w-7xl space-y-8">
+    <div className="min-h-screen p-4 fade-in">
+      <div className="space-y-8">
         <h1 className="text-2xl font-bold font-mono text-left">Dashboard Overview</h1>
         
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
