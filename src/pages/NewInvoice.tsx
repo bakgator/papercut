@@ -71,11 +71,11 @@ const NewInvoice = () => {
         .split("T")[0],
       items: [
         {
-          description: "New Item",  // Non-optional string
-          quantity: 1,              // Non-optional number
-          unitPrice: 0,            // Non-optional number
-          total: 0                 // Non-optional number
-        } as InvoiceItem  // Explicitly cast to InvoiceItem type
+          description: "New Item",
+          quantity: 1,
+          unitPrice: 0,
+          total: 0
+        } as InvoiceItem
       ],
       notes: "",
     },
@@ -132,13 +132,13 @@ const NewInvoice = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/80 p-4 sm:p-8 fade-in">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">New Invoice</h1>
+          <h1 className="text-2xl font-bold font-mono tracking-tight">New Invoice</h1>
         </div>
 
-        <div className="bg-white shadow-sm rounded-lg p-6">
+        <div className="bg-gradient-to-br from-card/50 to-background backdrop-blur-sm border border-border/50 rounded-lg p-6 shadow-sm">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
@@ -146,13 +146,13 @@ const NewInvoice = () => {
                 name="customerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Customer</FormLabel>
+                    <FormLabel className="font-mono">Customer</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-background/50 backdrop-blur-sm">
                           <SelectValue placeholder="Select a customer" />
                         </SelectTrigger>
                       </FormControl>
@@ -175,9 +175,9 @@ const NewInvoice = () => {
                   name="invoiceDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Invoice Date</FormLabel>
+                      <FormLabel className="font-mono">Invoice Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input type="date" className="bg-background/50 backdrop-blur-sm" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -189,9 +189,9 @@ const NewInvoice = () => {
                   name="dueDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Due Date</FormLabel>
+                      <FormLabel className="font-mono">Due Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <Input type="date" className="bg-background/50 backdrop-blur-sm" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -203,13 +203,13 @@ const NewInvoice = () => {
                   name="paymentTerms"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Payment Terms</FormLabel>
+                      <FormLabel className="font-mono">Payment Terms</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="bg-background/50 backdrop-blur-sm">
                             <SelectValue placeholder="Select payment terms" />
                           </SelectTrigger>
                         </FormControl>
@@ -229,22 +229,27 @@ const NewInvoice = () => {
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-semibold">Items</h3>
-                  <Button type="button" variant="outline" onClick={addItem}>
+                  <h3 className="text-lg font-semibold font-mono">Items</h3>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={addItem}
+                    className="bg-background/50 backdrop-blur-sm hover:bg-primary/20"
+                  >
                     Add Item
                   </Button>
                 </div>
 
                 {form.watch("items").map((item, index) => (
-                  <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg">
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gradient-to-br from-card/30 to-background/30 backdrop-blur-sm border border-border/50 rounded-lg">
                     <FormField
                       control={form.control}
                       name={`items.${index}.description`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description</FormLabel>
+                          <FormLabel className="font-mono">Description</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input className="bg-background/50 backdrop-blur-sm" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -256,10 +261,11 @@ const NewInvoice = () => {
                       name={`items.${index}.quantity`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Quantity</FormLabel>
+                          <FormLabel className="font-mono">Quantity</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
+                              className="bg-background/50 backdrop-blur-sm"
                               {...field}
                               onChange={(e) => {
                                 field.onChange(Number(e.target.value));
@@ -277,10 +283,11 @@ const NewInvoice = () => {
                       name={`items.${index}.unitPrice`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Unit Price (SEK)</FormLabel>
+                          <FormLabel className="font-mono">Unit Price (SEK)</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
+                              className="bg-background/50 backdrop-blur-sm"
                               {...field}
                               onChange={(e) => {
                                 field.onChange(Number(e.target.value));
@@ -299,9 +306,14 @@ const NewInvoice = () => {
                         name={`items.${index}.total`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Total (SEK)</FormLabel>
+                            <FormLabel className="font-mono">Total (SEK)</FormLabel>
                             <FormControl>
-                              <Input type="number" {...field} readOnly />
+                              <Input 
+                                type="number" 
+                                className="bg-background/50 backdrop-blur-sm" 
+                                {...field} 
+                                readOnly 
+                              />
                             </FormControl>
                           </FormItem>
                         )}
@@ -311,7 +323,7 @@ const NewInvoice = () => {
                         <Button
                           type="button"
                           variant="destructive"
-                          className="mt-2"
+                          className="mt-2 hover:bg-destructive/90"
                           onClick={() => removeItem(index)}
                         >
                           Remove
@@ -322,16 +334,16 @@ const NewInvoice = () => {
                 ))}
               </div>
 
-              <div className="space-y-4 border-t pt-4">
-                <div className="flex justify-between text-sm">
+              <div className="space-y-4 border-t border-border/50 pt-4">
+                <div className="flex justify-between text-sm font-mono">
                   <span>Subtotal:</span>
                   <span>{subtotal.toFixed(2)} SEK</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-sm font-mono">
                   <span>VAT ({VAT_RATE}%):</span>
                   <span>{vatAmount.toFixed(2)} SEK</span>
                 </div>
-                <div className="flex justify-between font-bold">
+                <div className="flex justify-between font-bold font-mono">
                   <span>Total:</span>
                   <span>{total.toFixed(2)} SEK</span>
                 </div>
@@ -342,10 +354,11 @@ const NewInvoice = () => {
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Notes</FormLabel>
+                    <FormLabel className="font-mono">Notes</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Add any additional notes or payment instructions..."
+                        className="bg-background/50 backdrop-blur-sm resize-none"
                         {...field}
                       />
                     </FormControl>
@@ -359,10 +372,16 @@ const NewInvoice = () => {
                   type="button"
                   variant="outline"
                   onClick={() => navigate("/dashboard")}
+                  className="bg-background/50 backdrop-blur-sm hover:bg-primary/20"
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Create Invoice</Button>
+                <Button 
+                  type="submit"
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  Create Invoice
+                </Button>
               </div>
             </form>
           </Form>

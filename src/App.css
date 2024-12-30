@@ -36,7 +36,7 @@
 }
 
 .card {
-  @apply bg-card text-card-foreground shadow-none border border-border;
+  @apply bg-gradient-to-br from-card/50 to-background backdrop-blur-sm border border-border/50 shadow-sm;
   padding: 2em;
 }
 

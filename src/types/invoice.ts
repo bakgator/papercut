@@ -12,6 +12,11 @@ export interface Invoice {
   date: string;
   dueDate: string;
   items: InvoiceItem[];
+  subtotal: number;
+  vatRate: number;
+  vatAmount: number;
   total: number;
   status: 'paid' | 'unpaid';
+  paymentTerms: string;
+  notes?: string;
 }
