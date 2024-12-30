@@ -106,6 +106,15 @@ const NewDashboard = () => {
 
   const chartData = getTimeframeData();
 
+  const chartConfig = {
+    amount: {
+      theme: {
+        light: "hsl(var(--primary))",
+        dark: "hsl(var(--primary))"
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 sm:p-8 fade-in">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -162,7 +171,7 @@ const NewDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <ChartContainer>
+              <ChartContainer config={chartConfig}>
                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                   <XAxis dataKey="date" />
                   <YAxis 
@@ -172,7 +181,7 @@ const NewDashboard = () => {
                         currency: 'SEK',
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 0,
-                      }).format(value)
+                      }).format(Number(value))
                     }
                   />
                   <Bar dataKey="amount" fill="currentColor" />
@@ -186,7 +195,7 @@ const NewDashboard = () => {
                               currency: 'SEK',
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0,
-                            }).format(payload[0].value)}`}</p>
+                            }).format(Number(payload[0].value))}`}</p>
                           </div>
                         );
                       }

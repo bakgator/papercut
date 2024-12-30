@@ -23,6 +23,7 @@ import * as z from "zod";
 import { useNavigate } from "react-router-dom";
 import { store } from "@/lib/store";
 import { toast } from "sonner";
+import type { InvoiceItem } from "@/types/invoice";
 
 const invoiceItemSchema = z.object({
   description: z.string().min(1, "Description is required"),
