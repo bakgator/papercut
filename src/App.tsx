@@ -35,7 +35,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/80 flex flex-col">
+          <div className="min-h-screen bg-white flex flex-col">
             <Navigation />
             <div className="flex-1">
               <Suspense fallback={
