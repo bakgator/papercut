@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { format, startOfDay, eachDayOfInterval, eachMonthOfInterval, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, addHours, startOfHour } from "date-fns";
+import { format, startOfDay, eachDayOfInterval, eachMonthOfInterval, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, addHours, startOfHour, subDays } from "date-fns";
 import { store } from "@/lib/store";
 import { TimeframeToggle } from "./TimeframeToggle";
 import { RevenueChart } from "./RevenueChart";
@@ -26,7 +26,7 @@ export const RevenueOverview = () => {
     switch (timeframe) {
       case "day": {
         start = startOfDay(now);
-        intervals = Array.from({ length: 6 }, (_, i) => addHours(start, i * 4));
+        intervals = Array.from({ length: 7 }, (_, i) => addHours(start, i * 4));
         break;
       }
       case "week": {
@@ -37,8 +37,9 @@ export const RevenueOverview = () => {
       }
       case "month": {
         start = startOfMonth(now);
-        const end = endOfMonth(now);
-        intervals = eachDayOfInterval({ start, end });
+        // Get the last 7 days for month view
+        start = subDays(now, 6);
+        intervals = eachDayOfInterval({ start, end: now });
         break;
       }
       case "year": {
@@ -76,7 +77,7 @@ export const RevenueOverview = () => {
           break;
         case "month":
           nextDate = new Date(date.getTime() + (24 * 60 * 60 * 1000));
-          label = format(date, "d");
+          label = format(date, "MMM d");
           break;
         case "year":
           nextDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
