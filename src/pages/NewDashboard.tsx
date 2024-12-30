@@ -20,7 +20,7 @@ const NewDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-custom-bg p-4 sm:p-8 fade-in">
+    <div className="min-h-screen bg-custom-bg p-4 fade-in">
       <div className="max-w-7xl mx-auto space-y-8">
         <h1 className="text-2xl font-bold font-mono">Dashboard Overview</h1>
         
