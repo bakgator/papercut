@@ -16,7 +16,7 @@ const Navigation = () => {
   return (
     <div className="flex flex-col">
       {/* Logo Section */}
-      <div className="bg-custom-bg backdrop-blur-sm border-b border-border/50 py-6">
+      <div className="bg-custom-bg backdrop-blur-sm py-6">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <img 
             src="/lovable-uploads/c0b9f3b4-6f7e-47a5-ab17-de467377618c.png" 

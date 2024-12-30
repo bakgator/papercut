@@ -25,7 +25,7 @@ const NewDashboard = () => {
         <h1 className="text-2xl font-bold font-mono">Dashboard Overview</h1>
         
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Card className="bg-gradient-to-br from-white/80 via-white/50 to-white/30 border-gray-200/50 shadow-sm backdrop-blur-sm">
+          <Card className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Invoices</CardTitle>
             </CardHeader>
@@ -34,7 +34,7 @@ const NewDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-white/80 via-white/50 to-white/30 border-gray-200/50 shadow-sm backdrop-blur-sm">
+          <Card className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Paid Invoices</CardTitle>
             </CardHeader>
@@ -43,7 +43,7 @@ const NewDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-white/80 via-white/50 to-white/30 border-gray-200/50 shadow-sm backdrop-blur-sm">
+          <Card className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Unpaid Invoices</CardTitle>
             </CardHeader>
@@ -54,7 +54,7 @@ const NewDashboard = () => {
         </div>
 
         {upcomingDueInvoices.length > 0 && (
-          <Alert variant="destructive" className="bg-gradient-to-br from-white/80 via-white/50 to-white/30 border-gray-200/50 shadow-sm backdrop-blur-sm">
+          <Alert variant="destructive" className="bg-custom-element border-gray-200/50 shadow-sm backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-start gap-3">
                 <AlertCircle className="h-4 w-4 mt-1" />
@@ -65,7 +65,7 @@ const NewDashboard = () => {
                   </AlertDescription>
                 </div>
               </div>
-              <Button variant="outline" className="gap-2 bg-white/50 hover:bg-white/80">
+              <Button variant="outline" className="gap-2 bg-custom-element hover:bg-white/80">
                 <AlertCircle className="w-4 h-4" />
                 Check this
               </Button>
