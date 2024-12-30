@@ -107,6 +107,9 @@ export const RevenueOverview = () => {
   };
 
   const chartData = getTimeframeData();
+  
+  // Find the maximum value for Y axis
+  const maxAmount = Math.max(...chartData.map(item => item.amount));
 
   return (
     <Card className="card-gradient">
@@ -133,15 +136,20 @@ export const RevenueOverview = () => {
             >
               <XAxis 
                 dataKey="date" 
-                axisLine={false}
-                tickLine={false}
-                hide={true}
+                axisLine={true}
+                tickLine={true}
+                hide={false}
+                stroke="currentColor"
+                fontSize={12}
               />
               <YAxis 
                 tickFormatter={(value) => formatCurrency(Number(value))}
-                axisLine={false}
-                tickLine={false}
-                hide={true}
+                axisLine={true}
+                tickLine={true}
+                hide={false}
+                stroke="currentColor"
+                fontSize={12}
+                ticks={[maxAmount]} // Only show the highest value
               />
               <Line 
                 type="monotone"
