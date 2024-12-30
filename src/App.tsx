@@ -59,7 +59,6 @@ const App = () => (
                 </Routes>
               </Suspense>
             </div>
-            <Footer />
           </div>
         </BrowserRouter>
       </TooltipProvider>
