@@ -58,7 +58,7 @@ export const InvoiceForm = () => {
           quantity: 1,
           unitPrice: 0,
           total: 0,
-        },
+        } satisfies InvoiceItem,
       ],
       notes: "",
     },
