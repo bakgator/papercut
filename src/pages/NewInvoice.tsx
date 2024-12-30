@@ -70,11 +70,11 @@ const NewInvoice = () => {
         .split("T")[0],
       items: [
         {
-          description: "New Item",  // Non-optional default value
-          quantity: 1,              // Non-optional default value
-          unitPrice: 0,            // Non-optional default value
-          total: 0                 // Non-optional default value
-        }
+          description: "New Item",  // Non-optional string
+          quantity: 1,              // Non-optional number
+          unitPrice: 0,            // Non-optional number
+          total: 0                 // Non-optional number
+        } as InvoiceItem  // Explicitly cast to InvoiceItem type
       ],
       notes: "",
     },
