@@ -24,7 +24,7 @@
     --input: 240 5.9% 90%;
     --ring: 167 100% 34%;
     --radius: 1rem;
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 167 100% 34%;
     --sidebar-primary-foreground: 0 0% 98%;
@@ -72,7 +72,7 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-white text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 

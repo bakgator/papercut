@@ -19,8 +19,8 @@ export default {
 		},
 		extend: {
 			colors: {
-				'custom-bg': '#dbd8d0',
-				'custom-element': '#edebe7',
+				'custom-bg': '#ffffff',
+				'custom-element': '#ffffff',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
