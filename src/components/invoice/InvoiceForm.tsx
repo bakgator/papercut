@@ -63,10 +63,15 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
   // Create invoice mutation
   const createInvoice = useMutation({
     mutationFn: async (invoiceData: any) => {
-      // First insert the invoice
+      // Get the current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("No user found");
+
+      // First insert the invoice with user_id
       const { data: invoice, error: invoiceError } = await supabase
         .from("invoices")
-        .insert([invoiceData])
+        .insert([{ ...invoiceData, user_id: user.id }])
         .select()
         .single();
 
@@ -116,7 +121,7 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
       vat_rate: vatRate,
       vat_amount: vatAmount,
       total,
-      status: "unpaid",
+      status: "unpaid" as const,
       payment_terms: data.paymentTerms,
       notes: data.notes,
       invoice_number: `INV-${Date.now()}`, // You might want to implement a more sophisticated numbering system
