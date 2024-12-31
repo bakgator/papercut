@@ -43,9 +43,9 @@ const Paperwork = () => {
         ...invoice,
         customer: invoice.customer?.company_name || 'Unknown Customer',
         items: invoice.items || [],
-        // Ensure status is either 'paid' or 'unpaid'
+        // Ensure status is either 'paid' or 'unpaid' and matches the type
         status: invoice.status === 'paid' ? 'paid' : 'unpaid'
-      }));
+      })) as Invoice[];  // Type assertion to ensure the mapped data matches our Invoice type
     },
   });
 
@@ -69,7 +69,7 @@ const Paperwork = () => {
 
   // Update invoice status mutation
   const updateInvoiceStatus = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: 'paid' | 'unpaid' }) => {
       const { error } = await supabase
         .from("invoices")
         .update({ status })
