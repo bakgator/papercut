@@ -9,10 +9,30 @@ import { AddressSection } from "@/components/customer/AddressSection";
 import { ContactPersonSection } from "@/components/customer/ContactPersonSection";
 import { CustomerFormData } from "@/types/customer";
 import { store } from "@/lib/store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+const customerSchema = z.object({
+  companyName: z.string().min(1, "Company name is required"),
+  orgNumber: z.string().min(1, "Organisation number is required"),
+  vatNumber: z.string().optional(),
+  billingAddress: z.string().min(1, "Billing address is required"),
+  shippingAddress: z.string().optional(),
+  useCustomShipping: z.boolean(),
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  phone: z.string().optional(),
+  contactPerson: z.object({
+    name: z.string().optional(),
+    position: z.string().optional(),
+    email: z.string().optional(),
+    phone: z.string().optional(),
+  }),
+});
 
 const NewCustomer = () => {
   const navigate = useNavigate();
   const form = useForm<CustomerFormData>({
+    resolver: zodResolver(customerSchema),
     defaultValues: {
       companyName: "",
       orgNumber: "",
@@ -32,15 +52,19 @@ const NewCustomer = () => {
   });
 
   const onSubmit = async (data: CustomerFormData) => {
-    store.addCustomer({
-      companyName: data.companyName,
-      email: data.email,
-      phone: data.phone,
-      billingAddress: data.billingAddress,
-    });
-    
-    toast.success("Customer created successfully");
-    navigate("/dashboard");
+    try {
+      store.addCustomer({
+        companyName: data.companyName,
+        email: data.email,
+        phone: data.phone,
+        billingAddress: data.billingAddress,
+      });
+      
+      toast.success("Customer created successfully");
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Failed to create customer");
+    }
   };
 
   return (

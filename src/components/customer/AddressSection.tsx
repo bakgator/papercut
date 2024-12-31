@@ -17,7 +17,7 @@ export function AddressSection({ form }: AddressSectionProps) {
         name="billingAddress"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Billing Address</FormLabel>
+            <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">Billing Address</FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Enter billing address"

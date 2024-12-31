@@ -16,7 +16,7 @@ export function CompanyInfoSection({ form }: CompanyInfoSectionProps) {
         name="companyName"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Company Name</FormLabel>
+            <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">Company Name</FormLabel>
             <FormControl>
               <Input placeholder="Enter company name" {...field} />
             </FormControl>
@@ -31,7 +31,7 @@ export function CompanyInfoSection({ form }: CompanyInfoSectionProps) {
           name="orgNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Organisation Number</FormLabel>
+              <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">Organisation Number</FormLabel>
               <FormControl>
                 <Input placeholder="Enter organisation number" {...field} />
               </FormControl>
@@ -61,7 +61,7 @@ export function CompanyInfoSection({ form }: CompanyInfoSectionProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Company Email</FormLabel>
+              <FormLabel className="after:content-['*'] after:ml-0.5 after:text-red-500">Company Email</FormLabel>
               <FormControl>
                 <Input type="email" placeholder="Enter company email" {...field} />
               </FormControl>
