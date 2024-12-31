@@ -37,7 +37,7 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
       customerId: "",
       invoiceDate: new Date().toISOString().split('T')[0],
       dueDate: new Date().toISOString().split('T')[0],
-      items: [{ id: "1", description: "", quantity: 0, unitPrice: 0, total: 0 }],
+      items: [{ id: "1", description: "", quantity: 0, unit_price: 0, total: 0 }],
       notes: "",
       paymentTerms: "net30"
     }
@@ -73,7 +73,7 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
   const updateItemTotal = (index: number) => {
     const items = methods.getValues("items");
     const item = items[index];
-    item.total = item.quantity * item.unitPrice;
+    item.total = item.quantity * item.unit_price;
     methods.setValue("items", items);
   };
 

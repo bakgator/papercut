@@ -41,11 +41,10 @@ const Paperwork = () => {
 
       return data.map(invoice => ({
         ...invoice,
-        customer: invoice.customer?.company_name || 'Unknown Customer',
+        customer: { company_name: invoice.customer?.company_name || 'Unknown Customer' },
         items: invoice.items || [],
-        // Ensure status is either 'paid' or 'unpaid' and matches the type
         status: invoice.status === 'paid' ? 'paid' : 'unpaid'
-      })) as Invoice[];  // Type assertion to ensure the mapped data matches our Invoice type
+      })) as Invoice[];
     },
   });
 
@@ -112,7 +111,7 @@ const Paperwork = () => {
         .insert([{
           ...purchaseData,
           user_id: user.id,
-          image_url: purchaseData.image_url // Ensure correct property name
+          image_url: purchaseData.image_url
         }]);
 
       if (error) throw error;
@@ -170,7 +169,7 @@ const Paperwork = () => {
       date: new Date().toISOString().split('T')[0],
       description,
       amount: parseFloat(amount),
-      image_url: URL.createObjectURL(selectedFile), // Fixed property name
+      image_url: URL.createObjectURL(selectedFile),
       user_id: user.id
     });
   };
