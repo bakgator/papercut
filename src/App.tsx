@@ -35,10 +35,10 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen bg-white flex">
+          <div className="min-h-screen bg-background flex">
             <Navigation />
-            <div className="flex-1 flex flex-col">
-              <div className="flex-1">
+            <main className="flex-1">
+              <div className="p-4">
                 <Suspense fallback={
                   <div className="flex items-center justify-center h-full">
                     <div className="w-8 h-8 rounded-full border-4 border-primary border-r-transparent animate-spin"></div>
@@ -54,14 +54,14 @@ const App = () => (
                     <Route path="/invoices/new" element={<NewInvoice />} />
                     <Route path="/invoices/:id/edit" element={<NewInvoice />} />
                     <Route path="/invoices/:id" element={<Index />} />
-                    <Route path="/paperwork" element={<Paperwork />} />
+                    <Route path="/bookkeeping" element={<Paperwork />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/login" element={<Login />} />
                   </Routes>
                 </Suspense>
+                <Footer />
               </div>
-              <Footer />
-            </div>
+            </main>
           </div>
         </BrowserRouter>
       </TooltipProvider>
