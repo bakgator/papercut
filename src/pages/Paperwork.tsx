@@ -92,11 +92,18 @@ const Paperwork = () => {
       date: string;
       description: string;
       amount: number;
-      imageUrl?: string;
+      image_url?: string;
     }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
       const { error } = await supabase
         .from("purchases")
-        .insert([purchaseData]);
+        .insert([{
+          ...purchaseData,
+          user_id: user.id,
+          image_url: purchaseData.image_url // Ensure correct property name
+        }]);
 
       if (error) throw error;
     },

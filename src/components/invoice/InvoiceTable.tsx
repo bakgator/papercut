@@ -8,15 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { InvoiceActions } from "./InvoiceActions";
-
-interface Invoice {
-  id: string;
-  invoiceNumber: string;
-  customer: string;
-  date: string;
-  total: number;
-  status: 'paid' | 'unpaid';
-}
+import type { Invoice } from "@/types/invoice";
 
 interface InvoiceTableProps {
   invoices: Invoice[];
@@ -44,8 +36,8 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.id}>
-            <TableCell>#{invoice.id}</TableCell>
-            <TableCell>{invoice.customer}</TableCell>
+            <TableCell>#{invoice.invoice_number}</TableCell>
+            <TableCell>{invoice.customer_id}</TableCell>
             <TableCell>{invoice.date}</TableCell>
             <TableCell>{invoice.total} SEK</TableCell>
             <TableCell>

@@ -13,9 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { Customer } from "@/types/invoice";
 
 interface InvoiceCustomerSectionProps {
-  customers: Array<{ id: string; companyName: string }>;
+  customers: Customer[];
 }
 
 export const InvoiceCustomerSection: React.FC<InvoiceCustomerSectionProps> = ({ customers }) => {
@@ -37,7 +38,7 @@ export const InvoiceCustomerSection: React.FC<InvoiceCustomerSectionProps> = ({ 
             <SelectContent>
               {customers.map((customer) => (
                 <SelectItem key={customer.id} value={customer.id}>
-                  {customer.companyName}
+                  {customer.company_name}
                 </SelectItem>
               ))}
             </SelectContent>
