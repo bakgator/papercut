@@ -11,15 +11,6 @@ import {
   ChevronDown,
   ChevronUp
 } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -50,65 +41,76 @@ const Navigation = memo(() => {
     const isSubmenuOpen = openSubmenu === link.href;
 
     return (
-      <SidebarMenuItem key={link.href}>
-        <SidebarMenuButton
-          asChild
-          isActive={isActive}
-          className={cn(isSubmenuItem && "ml-4")}
-          tooltip={link.label}
+      <div key={link.href} className="relative">
+        <Link
+          to={hasSubmenu ? "#" : link.href}
+          onClick={hasSubmenu ? () => toggleSubmenu(link.href) : undefined}
+          className={cn(
+            "inline-flex items-center px-3 py-1 text-sm font-medium transition-all duration-200 rounded-lg bg-custom-element",
+            isActive
+              ? "bg-primary/10 text-primary border border-primary/20"
+              : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+            isSubmenuItem && "ml-6"
+          )}
         >
-          <Link
-            to={hasSubmenu ? "#" : link.href}
-            onClick={hasSubmenu ? () => toggleSubmenu(link.href) : undefined}
-          >
-            <Icon className="w-4 h-4" />
-            <span>{link.label}</span>
-            {hasSubmenu && (
-              <span className="ml-auto">
-                {isSubmenuOpen ? (
-                  <ChevronUp className="w-4 h-4" />
-                ) : (
-                  <ChevronDown className="w-4 h-4" />
-                )}
-              </span>
+          <Icon
+            className={cn(
+              "w-4 h-4 mr-2 transition-colors",
+              isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
             )}
-          </Link>
-        </SidebarMenuButton>
+          />
+          {link.label}
+          {hasSubmenu && (
+            <span className="ml-2">
+              {isSubmenuOpen ? (
+                <ChevronUp className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4" />
+              )}
+            </span>
+          )}
+        </Link>
         {hasSubmenu && isSubmenuOpen && (
-          <div className="mt-1">
+          <div className="mt-1 space-y-1">
             {link.submenu.map((subItem: any) => renderMenuItem(subItem, true))}
           </div>
         )}
-      </SidebarMenuItem>
+      </div>
     );
   };
 
   return (
-    <SidebarProvider defaultOpen>
-      <Sidebar>
-        <SidebarHeader className="border-b p-4">
-          <img 
-            src="/lovable-uploads/c0b9f3b4-6f7e-47a5-ab17-de467377618c.png" 
-            alt="Logo" 
-            className="h-8"
-            loading="eager"
-          />
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            {links.map((link) => renderMenuItem(link))}
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link to="/login" className="mt-4">
-                  <LogIn className="w-4 h-4" />
-                  <span>Login</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarContent>
-      </Sidebar>
-    </SidebarProvider>
+    <div className="flex flex-col">
+      <div className="bg-custom-bg py-6">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center">
+            <img 
+              src="/lovable-uploads/c0b9f3b4-6f7e-47a5-ab17-de467377618c.png" 
+              alt="Logo" 
+              className="h-12"
+              loading="eager"
+            />
+            <Link
+              to="/login"
+              className="inline-flex items-center px-3 py-1 text-sm font-medium transition-all duration-200 rounded-lg bg-custom-element text-muted-foreground hover:text-foreground hover:bg-accent/50"
+            >
+              <LogIn className="w-4 h-4 mr-2" />
+              Login
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <nav className="bg-custom-bg">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex h-14">
+            <div className="flex flex-col space-y-1">
+              {links.map((link) => renderMenuItem(link))}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
   );
 });
 
