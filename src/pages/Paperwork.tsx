@@ -2,35 +2,115 @@ import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload, FileImage } from "lucide-react";
 import { Link } from "react-router-dom";
-import { store } from "@/lib/store";
 import { toast } from "sonner";
 import { InvoiceTable } from "@/components/invoice/InvoiceTable";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const Paperwork = () => {
-  const invoices = store.getInvoices();
-  const purchases = store.getPurchases();
+  const queryClient = useQueryClient();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleMarkAsPaid = (id: string) => {
-    if (store.markInvoiceAsPaid(id)) {
-      toast.success("Invoice marked as paid");
-    } else {
-      toast.error("Failed to mark invoice as paid");
-    }
+  // Fetch invoices
+  const { data: invoices, isLoading: isLoadingInvoices } = useQuery({
+    queryKey: ["invoices"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("invoices")
+        .select(`
+          *,
+          customer:customers(company_name)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        toast.error("Failed to load invoices");
+        throw error;
+      }
+
+      return data.map(invoice => ({
+        ...invoice,
+        customer: invoice.customer?.company_name || 'Unknown Customer'
+      }));
+    },
+  });
+
+  // Fetch purchases
+  const { data: purchases, isLoading: isLoadingPurchases } = useQuery({
+    queryKey: ["purchases"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("purchases")
+        .select("*")
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        toast.error("Failed to load purchases");
+        throw error;
+      }
+
+      return data;
+    },
+  });
+
+  // Update invoice status mutation
+  const updateInvoiceStatus = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const { error } = await supabase
+        .from("invoices")
+        .update({ status })
+        .eq("id", id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+    },
+    onError: () => {
+      toast.error("Failed to update invoice status");
+    },
+  });
+
+  const handleMarkAsPaid = async (id: string) => {
+    await updateInvoiceStatus.mutateAsync({ id, status: "paid" });
+    toast.success("Invoice marked as paid");
   };
 
-  const handleMarkAsUnpaid = (id: string) => {
-    if (store.markInvoiceAsUnpaid(id)) {
-      toast.success("Invoice marked as unpaid");
-    } else {
-      toast.error("Failed to mark invoice as unpaid");
-    }
+  const handleMarkAsUnpaid = async (id: string) => {
+    await updateInvoiceStatus.mutateAsync({ id, status: "unpaid" });
+    toast.success("Invoice marked as unpaid");
   };
+
+  // Add purchase mutation
+  const addPurchase = useMutation({
+    mutationFn: async (purchaseData: {
+      date: string;
+      description: string;
+      amount: number;
+      imageUrl?: string;
+    }) => {
+      const { error } = await supabase
+        .from("purchases")
+        .insert([purchaseData]);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["purchases"] });
+      setSelectedFile(null);
+      setDescription("");
+      setAmount("");
+      toast.success("Purchase added successfully");
+    },
+    onError: () => {
+      toast.error("Failed to add purchase");
+    },
+  });
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -63,22 +143,29 @@ const Paperwork = () => {
       return;
     }
 
-    // In a real application, you would upload the file to a server here
+    // In a real application, you would upload the file to Supabase Storage here
     // For now, we'll create a local URL
     const imageUrl = URL.createObjectURL(selectedFile);
 
-    store.addPurchase({
-      date: new Date().toISOString(),
+    await addPurchase.mutateAsync({
+      date: new Date().toISOString().split('T')[0],
       description,
       amount: parseFloat(amount),
       imageUrl,
     });
-
-    setSelectedFile(null);
-    setDescription("");
-    setAmount("");
-    toast.success("Purchase added successfully");
   };
+
+  if (isLoadingInvoices || isLoadingPurchases) {
+    return (
+      <div className="min-h-screen bg-custom-bg p-4 sm:p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-center items-center h-64">
+            <p className="text-lg text-gray-500">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-custom-bg p-4 sm:p-8">
@@ -168,13 +255,15 @@ const Paperwork = () => {
           <CardContent className="p-4">
             <h2 className="text-xl font-semibold mb-4">Recent Purchases</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {purchases.map((purchase) => (
+              {purchases?.map((purchase) => (
                 <div key={purchase.id} className="border rounded-lg p-4">
-                  <img
-                    src={purchase.imageUrl}
-                    alt={purchase.description}
-                    className="w-full h-48 object-cover rounded-lg mb-2"
-                  />
+                  {purchase.image_url && (
+                    <img
+                      src={purchase.image_url}
+                      alt={purchase.description}
+                      className="w-full h-48 object-cover rounded-lg mb-2"
+                    />
+                  )}
                   <h3 className="font-medium">{purchase.description}</h3>
                   <p className="text-gray-600">
                     Amount: ${purchase.amount.toFixed(2)}
@@ -184,6 +273,11 @@ const Paperwork = () => {
                   </p>
                 </div>
               ))}
+              {purchases?.length === 0 && (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-gray-500">No purchases found</p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -192,11 +286,24 @@ const Paperwork = () => {
         <Card>
           <CardContent className="p-4">
             <h2 className="text-xl font-semibold mb-4">All Invoices</h2>
-            <InvoiceTable
-              invoices={invoices}
-              onMarkAsPaid={handleMarkAsPaid}
-              onMarkAsUnpaid={handleMarkAsUnpaid}
-            />
+            {invoices && (
+              <InvoiceTable
+                invoices={invoices}
+                onMarkAsPaid={handleMarkAsPaid}
+                onMarkAsUnpaid={handleMarkAsUnpaid}
+              />
+            )}
+            {invoices?.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No invoices found</p>
+                <Button asChild className="mt-4">
+                  <Link to="/invoices/new">
+                    <Plus className="mr-1" />
+                    Create Your First Invoice
+                  </Link>
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

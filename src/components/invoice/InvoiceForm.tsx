@@ -6,12 +6,12 @@ import { InvoiceDatesSection } from "./InvoiceDatesSection";
 import { InvoiceItemsSection } from "./InvoiceItemsSection";
 import { InvoiceNotesSection } from "./InvoiceNotesSection";
 import { InvoiceTotalsSection } from "./InvoiceTotalsSection";
-import { InvoiceActions } from "./InvoiceActions";
 import { Button } from "@/components/ui/button";
 import { SaveIcon } from "lucide-react";
-import { store } from "@/lib/store";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import type { InvoiceItem } from "@/types/invoice";
 
 interface FormValues {
@@ -29,6 +29,8 @@ interface Props {
 
 const InvoiceForm = ({ existingInvoiceId }: Props) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const methods = useForm<FormValues>({
     defaultValues: {
       customerId: "",
@@ -40,15 +42,63 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
     }
   });
 
-  const onSubmit = (data: FormValues) => {
-    if (!data.customerId) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
+  // Fetch customers for the dropdown
+  const { data: customers } = useQuery({
+    queryKey: ["customers"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("customers")
+        .select("*")
+        .order("company_name", { ascending: true });
 
-    const customer = store.getCustomer(data.customerId);
-    if (!customer) {
-      toast.error("Invalid customer selected");
+      if (error) {
+        toast.error("Failed to load customers");
+        throw error;
+      }
+
+      return data;
+    },
+  });
+
+  // Create invoice mutation
+  const createInvoice = useMutation({
+    mutationFn: async (invoiceData: any) => {
+      // First insert the invoice
+      const { data: invoice, error: invoiceError } = await supabase
+        .from("invoices")
+        .insert([invoiceData])
+        .select()
+        .single();
+
+      if (invoiceError) throw invoiceError;
+
+      // Then insert all invoice items
+      const { error: itemsError } = await supabase
+        .from("invoice_items")
+        .insert(
+          invoiceData.items.map((item: any) => ({
+            ...item,
+            invoice_id: invoice.id
+          }))
+        );
+
+      if (itemsError) throw itemsError;
+
+      return invoice;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      toast.success("Invoice created successfully");
+      navigate("/paperwork");
+    },
+    onError: () => {
+      toast.error("Failed to create invoice");
+    },
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    if (!data.customerId) {
+      toast.error("Please select a customer");
       return;
     }
 
@@ -57,25 +107,22 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
     const vatAmount = subtotal * (vatRate / 100);
     const total = subtotal + vatAmount;
 
-    const invoice = {
-      id: Math.random().toString(),
-      customer: customer.companyName,
-      customerId: data.customerId,
+    const invoiceData = {
+      customer_id: data.customerId,
       date: data.invoiceDate,
-      dueDate: data.dueDate,
+      due_date: data.dueDate,
       items: data.items,
       subtotal,
-      vatRate,
-      vatAmount,
+      vat_rate: vatRate,
+      vat_amount: vatAmount,
       total,
-      status: "unpaid" as const,
-      paymentTerms: data.paymentTerms,
-      notes: data.notes
+      status: "unpaid",
+      payment_terms: data.paymentTerms,
+      notes: data.notes,
+      invoice_number: `INV-${Date.now()}`, // You might want to implement a more sophisticated numbering system
     };
 
-    store.addInvoice(invoice);
-    toast.success("Invoice created successfully");
-    navigate("/dashboard");
+    await createInvoice.mutateAsync(invoiceData);
   };
 
   const updateItemTotal = (index: number) => {
@@ -90,23 +137,15 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
     const items = methods.watch("items");
     const subtotal = items.reduce((acc, item) => acc + item.total, 0);
     const vatAmount = subtotal * 0.25;
-    const total = subtotal * 1.25;
+    const total = subtotal + vatAmount;
     return { subtotal, vatAmount, total };
   }, [methods.watch("items")]);
-
-  // Create a mock invoice object for InvoiceActions
-  const mockInvoice = {
-    id: existingInvoiceId || "new",
-    status: "draft" as const
-  };
-
-  const buttonLabel = existingInvoiceId ? "Update Invoice" : "Save & Create";
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)} className="max-w-4xl mx-auto p-6 space-y-8">
         <InvoiceHeader />
-        <InvoiceCustomerSection customers={store.getCustomers()} />
+        <InvoiceCustomerSection customers={customers || []} />
         <InvoiceDatesSection />
         <InvoiceItemsSection 
           updateItemTotal={updateItemTotal}
@@ -122,16 +161,12 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
           <Button
             type="submit"
             className="bg-primary hover:bg-primary/90"
+            disabled={createInvoice.isPending}
           >
             <SaveIcon className="w-4 h-4 mr-2" />
-            {buttonLabel}
+            {createInvoice.isPending ? "Saving..." : "Save & Create"}
           </Button>
         </div>
-        <InvoiceActions 
-          invoice={mockInvoice}
-          onMarkAsPaid={() => {}}
-          onMarkAsUnpaid={() => {}}
-        />
       </form>
     </FormProvider>
   );
