@@ -42,7 +42,9 @@ const Paperwork = () => {
       return data.map(invoice => ({
         ...invoice,
         customer: invoice.customer?.company_name || 'Unknown Customer',
-        items: invoice.items || []
+        items: invoice.items || [],
+        // Ensure status is either 'paid' or 'unpaid'
+        status: invoice.status === 'paid' ? 'paid' : 'unpaid'
       }));
     },
   });
