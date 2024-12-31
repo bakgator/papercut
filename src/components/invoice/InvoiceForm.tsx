@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { InvoiceHeader } from "./InvoiceHeader";
 import { InvoiceCustomerSection } from "./InvoiceCustomerSection";
 import { InvoiceDatesSection } from "./InvoiceDatesSection";
@@ -9,9 +10,8 @@ import { InvoiceTotalsSection } from "./InvoiceTotalsSection";
 import { Button } from "@/components/ui/button";
 import { SaveIcon } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { useCreateInvoice } from "@/hooks/useCreateInvoice";
+import { useCustomers } from "@/hooks/useCustomers";
 import type { InvoiceItem } from "@/types/invoice";
 
 interface FormValues {
@@ -29,7 +29,8 @@ interface Props {
 
 const InvoiceForm = ({ existingInvoiceId }: Props) => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { data: customers } = useCustomers();
+  const createInvoiceMutation = useCreateInvoice();
 
   const methods = useForm<FormValues>({
     defaultValues: {
@@ -42,65 +43,6 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
     }
   });
 
-  // Fetch customers for the dropdown
-  const { data: customers } = useQuery({
-    queryKey: ["customers"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("customers")
-        .select("*")
-        .order("company_name", { ascending: true });
-
-      if (error) {
-        toast.error("Failed to load customers");
-        throw error;
-      }
-
-      return data;
-    },
-  });
-
-  // Create invoice mutation
-  const createInvoice = useMutation({
-    mutationFn: async (invoiceData: any) => {
-      // Get the current user
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError) throw userError;
-      if (!user) throw new Error("No user found");
-
-      // First insert the invoice with user_id
-      const { data: invoice, error: invoiceError } = await supabase
-        .from("invoices")
-        .insert([{ ...invoiceData, user_id: user.id }])
-        .select()
-        .single();
-
-      if (invoiceError) throw invoiceError;
-
-      // Then insert all invoice items
-      const { error: itemsError } = await supabase
-        .from("invoice_items")
-        .insert(
-          invoiceData.items.map((item: any) => ({
-            ...item,
-            invoice_id: invoice.id
-          }))
-        );
-
-      if (itemsError) throw itemsError;
-
-      return invoice;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["invoices"] });
-      toast.success("Invoice created successfully");
-      navigate("/paperwork");
-    },
-    onError: () => {
-      toast.error("Failed to create invoice");
-    },
-  });
-
   const onSubmit = async (data: FormValues) => {
     if (!data.customerId) {
       toast.error("Please select a customer");
@@ -108,26 +50,24 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
     }
 
     const subtotal = data.items.reduce((acc, item) => acc + item.total, 0);
-    const vatRate = 25; // 25% VAT rate
+    const vatRate = 25;
     const vatAmount = subtotal * (vatRate / 100);
     const total = subtotal + vatAmount;
 
-    const invoiceData = {
-      customer_id: data.customerId,
-      date: data.invoiceDate,
-      due_date: data.dueDate,
+    await createInvoiceMutation.mutateAsync({
+      customerId: data.customerId,
+      invoiceDate: data.invoiceDate,
+      dueDate: data.dueDate,
       items: data.items,
       subtotal,
-      vat_rate: vatRate,
-      vat_amount: vatAmount,
+      vatRate,
+      vatAmount,
       total,
-      status: "unpaid" as const,
-      payment_terms: data.paymentTerms,
+      paymentTerms: data.paymentTerms,
       notes: data.notes,
-      invoice_number: `INV-${Date.now()}`, // You might want to implement a more sophisticated numbering system
-    };
+    });
 
-    await createInvoice.mutateAsync(invoiceData);
+    navigate("/paperwork");
   };
 
   const updateItemTotal = (index: number) => {
@@ -137,7 +77,6 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
     methods.setValue("items", items);
   };
 
-  // Memoize calculations for totals
   const totals = useMemo(() => {
     const items = methods.watch("items");
     const subtotal = items.reduce((acc, item) => acc + item.total, 0);
@@ -152,9 +91,7 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
         <InvoiceHeader />
         <InvoiceCustomerSection customers={customers || []} />
         <InvoiceDatesSection />
-        <InvoiceItemsSection 
-          updateItemTotal={updateItemTotal}
-        />
+        <InvoiceItemsSection updateItemTotal={updateItemTotal} />
         <InvoiceNotesSection />
         <InvoiceTotalsSection 
           subtotal={totals.subtotal}
@@ -166,10 +103,10 @@ const InvoiceForm = ({ existingInvoiceId }: Props) => {
           <Button
             type="submit"
             className="bg-primary hover:bg-primary/90"
-            disabled={createInvoice.isPending}
+            disabled={createInvoiceMutation.isPending}
           >
             <SaveIcon className="w-4 h-4 mr-2" />
-            {createInvoice.isPending ? "Saving..." : "Save & Create"}
+            {createInvoiceMutation.isPending ? "Saving..." : "Save & Create"}
           </Button>
         </div>
       </form>
