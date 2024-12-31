@@ -28,7 +28,8 @@ const Paperwork = () => {
         .from("invoices")
         .select(`
           *,
-          customer:customers(company_name)
+          customer:customers(company_name),
+          items:invoice_items(*)
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -40,7 +41,8 @@ const Paperwork = () => {
 
       return data.map(invoice => ({
         ...invoice,
-        customer: invoice.customer?.company_name || 'Unknown Customer'
+        customer: invoice.customer?.company_name || 'Unknown Customer',
+        items: invoice.items || []
       }));
     },
   });

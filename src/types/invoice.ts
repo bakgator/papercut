@@ -21,12 +21,12 @@ export interface Invoice {
   status: 'paid' | 'unpaid';
   payment_terms: string | null;
   notes: string | null;
-  items: InvoiceItem[];
   created_at?: string;
   updated_at?: string;
   customer?: {
     company_name: string;
   };
+  items?: InvoiceItem[];
 }
 
 export interface Customer {
