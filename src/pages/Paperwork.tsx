@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import type { Invoice } from "@/types/invoice";
 
 const Paperwork = () => {
   const queryClient = useQueryClient();
@@ -20,12 +21,16 @@ const Paperwork = () => {
   const { data: invoices, isLoading: isLoadingInvoices } = useQuery({
     queryKey: ["invoices"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
       const { data, error } = await supabase
         .from("invoices")
         .select(`
           *,
           customer:customers(company_name)
         `)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -93,6 +98,7 @@ const Paperwork = () => {
       description: string;
       amount: number;
       image_url?: string;
+      user_id: string;
     }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
@@ -150,15 +156,18 @@ const Paperwork = () => {
       return;
     }
 
-    // In a real application, you would upload the file to Supabase Storage here
-    // For now, we'll create a local URL
-    const imageUrl = URL.createObjectURL(selectedFile);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error("You must be logged in to upload purchases");
+      return;
+    }
 
     await addPurchase.mutateAsync({
       date: new Date().toISOString().split('T')[0],
       description,
       amount: parseFloat(amount),
-      imageUrl,
+      image_url: URL.createObjectURL(selectedFile), // Fixed property name
+      user_id: user.id
     });
   };
 

@@ -4,28 +4,34 @@ export interface InvoiceItem {
   quantity: number;
   unitPrice: number;
   total: number;
+  invoice_id?: string;
 }
 
 export interface Invoice {
   id: string;
-  invoice_number: string;  // Changed from invoiceNumber to match DB
-  customer_id: string;     // Added to match DB
+  user_id: string;
+  invoice_number: string;
+  customer_id: string | null;
   date: string;
-  due_date: string;       // Changed from dueDate to match DB
-  items: InvoiceItem[];
+  due_date: string;
   subtotal: number;
-  vat_rate: number;      // Changed from vatRate to match DB
-  vat_amount: number;    // Changed from vatAmount to match DB
+  vat_rate: number;
+  vat_amount: number;
   total: number;
   status: 'paid' | 'unpaid';
-  payment_terms: string; // Changed from paymentTerms to match DB
-  notes?: string;
-  user_id: string;      // Added to match DB
+  payment_terms: string | null;
+  notes: string | null;
+  items: InvoiceItem[];
+  created_at?: string;
+  updated_at?: string;
+  customer?: {
+    company_name: string;
+  };
 }
 
 export interface Customer {
   id: string;
-  company_name: string;  // Changed from companyName to match DB
+  company_name: string;
   email?: string;
   phone?: string;
   billing_address?: string;
