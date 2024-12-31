@@ -22,7 +22,7 @@ const InvoiceItemsSection = memo(({ updateItemTotal }: InvoiceItemsSectionProps)
     const currentItems = form.getValues("items");
     form.setValue("items", [
       ...currentItems,
-      { id: Math.random().toString(), description: "", quantity: 1, unitPrice: 0, total: 0 },
+      { id: Math.random().toString(), description: "", quantity: 1, unit_price: 0, total: 0 },
     ]);
   };
 
@@ -88,7 +88,7 @@ const InvoiceItemsSection = memo(({ updateItemTotal }: InvoiceItemsSectionProps)
 
           <FormField
             control={form.control}
-            name={`items.${index}.unitPrice`}
+            name={`items.${index}.unit_price`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-mono">Unit Price (SEK)</FormLabel>

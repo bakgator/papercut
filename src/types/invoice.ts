@@ -2,9 +2,11 @@ export interface InvoiceItem {
   id?: string;
   description: string;
   quantity: number;
-  unitPrice: number;
+  unit_price: number; // Changed from unitPrice to match database
   total: number;
   invoice_id?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Invoice {
@@ -23,24 +25,8 @@ export interface Invoice {
   notes: string | null;
   created_at?: string;
   updated_at?: string;
-  customer?: {
+  customer: {
     company_name: string;
   };
   items?: InvoiceItem[];
-}
-
-export interface Customer {
-  id: string;
-  company_name: string;
-  email?: string;
-  phone?: string;
-  billing_address?: string;
-  shipping_address?: string;
-  org_number?: string;
-  vat_number?: string;
-  contact_person_name?: string;
-  contact_person_position?: string;
-  contact_person_email?: string;
-  contact_person_phone?: string;
-  user_id: string;
 }

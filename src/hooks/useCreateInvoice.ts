@@ -52,8 +52,11 @@ export const useCreateInvoice = () => {
         .from("invoice_items")
         .insert(
           invoiceData.items.map((item) => ({
-            ...item,
             invoice_id: invoice.id,
+            description: item.description,
+            quantity: item.quantity,
+            unit_price: item.unit_price,
+            total: item.total,
           }))
         );
 
