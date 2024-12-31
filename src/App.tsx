@@ -35,31 +35,33 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen bg-white flex flex-col">
+          <div className="min-h-screen bg-white flex">
             <Navigation />
-            <div className="flex-1">
-              <Suspense fallback={
-                <div className="flex items-center justify-center h-full">
-                  <div className="w-8 h-8 rounded-full border-4 border-primary border-r-transparent animate-spin"></div>
-                </div>
-              }>
-                <Routes>
-                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                  <Route path="/dashboard" element={<NewDashboard />} />
-                  <Route path="/invoices" element={<Dashboard />} />
-                  <Route path="/customers" element={<Customers />} />
-                  <Route path="/customers/new" element={<NewCustomer />} />
-                  <Route path="/customers/:id/edit" element={<NewCustomer />} />
-                  <Route path="/invoices/new" element={<NewInvoice />} />
-                  <Route path="/invoices/:id/edit" element={<NewInvoice />} />
-                  <Route path="/invoices/:id" element={<Index />} />
-                  <Route path="/paperwork" element={<Paperwork />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/login" element={<Login />} />
-                </Routes>
-              </Suspense>
+            <div className="flex-1 flex flex-col">
+              <div className="flex-1">
+                <Suspense fallback={
+                  <div className="flex items-center justify-center h-full">
+                    <div className="w-8 h-8 rounded-full border-4 border-primary border-r-transparent animate-spin"></div>
+                  </div>
+                }>
+                  <Routes>
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="/dashboard" element={<NewDashboard />} />
+                    <Route path="/invoices" element={<Dashboard />} />
+                    <Route path="/customers" element={<Customers />} />
+                    <Route path="/customers/new" element={<NewCustomer />} />
+                    <Route path="/customers/:id/edit" element={<NewCustomer />} />
+                    <Route path="/invoices/new" element={<NewInvoice />} />
+                    <Route path="/invoices/:id/edit" element={<NewInvoice />} />
+                    <Route path="/invoices/:id" element={<Index />} />
+                    <Route path="/paperwork" element={<Paperwork />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/login" element={<Login />} />
+                  </Routes>
+                </Suspense>
+              </div>
+              <Footer />
             </div>
-            <Footer />
           </div>
         </BrowserRouter>
       </TooltipProvider>
