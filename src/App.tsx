@@ -18,6 +18,7 @@ const NewInvoice = lazy(() => import("./pages/NewInvoice"));
 const Paperwork = lazy(() => import("./pages/Paperwork"));
 const About = lazy(() => import("./pages/About"));
 const Login = lazy(() => import("./pages/Login"));
+const PriceCalculator = lazy(() => import("./pages/PriceCalculator"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +54,7 @@ const App = () => (
                   <Route path="/invoices/new" element={<NewInvoice />} />
                   <Route path="/invoices/:id/edit" element={<NewInvoice />} />
                   <Route path="/invoices/:id" element={<Index />} />
+                  <Route path="/invoices/calculator" element={<PriceCalculator />} />
                   <Route path="/paperwork" element={<Paperwork />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/login" element={<Login />} />
